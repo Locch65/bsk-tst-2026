@@ -14,20 +14,31 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
     </style>
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/main-BphB5Q6b.js"></script>
-  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/modulepreload-polyfill-Dq6k8JGX.js">
-  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/common-gx1Ntxj2.js">
-  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/main-BJICsoRi.js">
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/main-DMwpP8Kn.js"></script>
+  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/modulepreload-polyfill-Dct9-obz.js">
+  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/common-DXUS2tco.js">
+  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/main-B0AwTWTP.js">
   <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/main-DbZ7AZpq.css">
-  <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/main-vqjxOMNm.css">
+  <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/main-BJkGFZO3.css">
 </head>
 
 <body>
 
-    <header>
+    <!-- <header>
         <h1>Polismile Basket U14</h1>
         <div class="app-version">Versione 1.0.134 Vite</div>
         <img src="icon-192.png" alt="Logo Polismile" class="header-logo" id="logo-admin">
+    </header> -->
+
+    <header>
+        <div style="display: flex; flex-direction: column;">
+            <h1>Polismile Basket U14</h1>
+            <div class="app-version">Versione 1.0.134 Vite</div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 1rem;">
+            <i class="fas fa-cog" id="btn-settings" style="font-size: 2.5rem; cursor: pointer; color: var(--primary);" onclick="window.apriPopupSettings()"></i>
+            <img src="icon-192.png" alt="Logo Polismile" class="header-logo" id="logo-admin">
+        </div>
     </header>
 
     <div class="menu-grid">
@@ -73,6 +84,55 @@
         </div>
     </div>
     
+    <div id="settingsPopup" class="hidden" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--overlay); z-index: 1500; justify-content: center; align-items: center;">
+        <div class="popup-content" style="max-width: 85%;">
+            <h3 style="color: var(--primary); font-size: 2.2rem; margin-bottom: 1.5rem;">Impostazioni Colore</h3>
+            
+            <!-- <div style="margin: 2rem 0;">
+                <input type="color" id="colorPicker" style="width: 100%; height: 80px; border: none; border-radius: 10px; cursor: pointer; background: none;">
+                <p id="rgbLabel" style="font-family: monospace; font-size: 1.8rem; margin-top: 1rem; color: var(--text-color);">RGB: #27ae60</p>
+            </div> -->
+
+        <div id="custom-picker-container" style="display: flex; flex-direction: column; gap: 1.5rem; margin: 2rem 0;">
+            
+            <div id="color-preview" style="width: 100%; height: 60px; border-radius: 10px; border: 2px solid #555; background: var(--primary);"></div>
+
+            <div class="slider-group">
+                <label>Tonalità: <span id="val-h">0</span>°</label>
+                <input type="range" id="range-h" min="0" max="360" value="145" class="hsv-slider hue-gradient">
+            </div>
+
+            <div class="slider-group">
+                <label>Saturazione: <span id="val-s">100</span>%</label>
+                <input type="range" id="range-s" min="0" max="100" value="100" class="hsv-slider">
+            </div>
+
+            <div class="slider-group">
+                <label>Luminosità: <span id="val-v">100</span>%</label>
+                <input type="range" id="range-v" min="0" max="100" value="100" class="hsv-slider">
+            </div>
+
+            <p id="hexLabel" style="font-family: monospace; font-size: 1.8rem; text-align: center; color: var(--text-color);">#27AE60</p>
+        </div>
+
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem;">
+            <button class="popup-btn" onclick="window.saveTheme()" style="background-color: var(--primary); flex: 1;">
+                Salva
+            </button>
+            
+            <button class="popup-btn" onclick="window.resetTheme()" style="background-color: #666; flex: 1;">
+                Reset
+            </button>
+            
+            <button class="popup-btn" onclick="window.chiudiPopupSettings()" style="background-color: #444; flex: 1;">
+                Annulla
+            </button>
+        </div>
+
+        </div>
+    </div>
+
+
     <div id="customPopup">
         <div class="popup-content">
             <i class="fas fa-tools" style="font-size: 5rem; color: var(--primary);"></i>
