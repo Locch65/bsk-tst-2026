@@ -1,0 +1,19 @@
+import"./modulepreload-polyfill-EeOZK34R.js";import"./common-CAzUAXMO.js";var e=[],t=[],n=JSON.parse(localStorage.getItem(`statoOrdineStats`))||{colonna:`punti`,ascendente:!1};async function r(){let e=localStorage.getItem(`datiRoster`),t=localStorage.getItem(`datiTutteLeStats`),n,r;if(e&&t)try{n=JSON.parse(e),r=JSON.parse(t)}catch(e){console.error(`Errore parsing cache, svuoto...`,e),localStorage.removeItem(`datiRoster`),localStorage.removeItem(`datiTutteLeStats`)}if(!n||!r){let e=await aggiornaDatiRosterEStats();e&&(n=e.roster,r=e.stats,localStorage.getItem(`isAdmin`)===`true`&&saveToFirebaseRoster(`roster/`,e.roster))}i(n,r)}function i(t,n){e=t.map((e,t)=>{let r=n.statisticheGiocatori.filter(t=>t.matchId&&String(t.matchId).toLowerCase().includes(`test`)?!1:t.giocatore===e.Nome+` `+e.Cognome||t.numero==e[`Numero Maglia`]&&t.giocatore.includes(e.Cognome));return{...e,indiceOriginale:t,azioni:r}}),a()}function a(){let n=document.querySelector(`input[name="catFilter"]:checked`).value,r=document.querySelector(`input[name="calcType"]:checked`).value;t=e.map(e=>{let t=e.azioni.filter(e=>{let t=e.matchId?String(e.matchId):``;return n===`Tutti`?t.includes(`U14`)||t.includes(`U15`):t.includes(n)}),i=[...new Set(t.map(e=>e.matchId))],a=0,o=0,s=0,c=0;t.forEach(e=>{try{let t=JSON.parse(e.contatori||`{}`);a+=parseInt(t[1])||0,o+=parseInt(t[2])||0,s+=parseInt(t[3])||0}catch{}}),c=a*1+o*2+s*3;let l=i.length,u=r===`Media`&&l>0?l:1;return{...e,partite:l,punti:r===`Media`?(c/u).toFixed(1):c,tl:r===`Media`?(a/u).toFixed(1):a,t2:r===`Media`?(o/u).toFixed(1):o,t3:r===`Media`?(s/u).toFixed(1):s,matchIdsFiltrati:i}}),c()}window.applicaFiltriECalcoli=a;function o(){let e=document.getElementById(`table-body`),n=document.getElementById(`table-foot`);document.getElementById(`loading`).style.display=`none`,document.getElementById(`roster-table`).style.display=`table`,e.innerHTML=``;let r=new Set,i=0,a=0,o=0,s=0;t.forEach(t=>{t.matchIdsFiltrati&&t.matchIdsFiltrati.forEach(e=>r.add(e)),i+=parseFloat(t.punti)||0,a+=parseFloat(t.tl)||0,o+=parseFloat(t.t2)||0,s+=parseFloat(t.t3)||0;let n=document.createElement(`tr`);n.onclick=()=>{window.location.href=`anagrafica.html?player=${t.indiceOriginale}`},n.innerHTML=`
+        <td><strong>${t[`Numero Maglia`]}</strong></td>
+        <td class="col-nome">${t.Cognome} ${t.Nome.charAt(0)}.</td>
+        <td>${t.partite}</td>
+        <td class="pts-bold">${t.punti}</td>
+        <td>${t.tl}</td>
+        <td>${t.t2}</td>
+        <td>${t.t3}</td>
+    `,e.appendChild(n)}),n.innerHTML=`
+    <tr class="tfoot-totale">
+        <td></td>
+        <td class="col-nome">TOTALE / MEDIA</td>
+        <td>${r.size}</td>
+        <td class="pts-bold">${i.toFixed(i%1==0?0:1)}</td>
+        <td>${a.toFixed(a%1==0?0:1)}</td>
+        <td>${o.toFixed(o%1==0?0:1)}</td>
+        <td>${s.toFixed(s%1==0?0:1)}</td>
+    </tr>
+    `}window.gestisciClickOrdinamento=s;function s(e){n.colonna===e?n.ascendente=!n.ascendente:(n.colonna=e,n.ascendente=e===`Cognome`),localStorage.setItem(`statoOrdineStats`,JSON.stringify(n)),c()}function c(){t.sort((e,t)=>{let r=e[n.colonna],i=t[n.colonna];return n.colonna!==`Cognome`&&(r=parseFloat(r)||0,i=parseFloat(i)||0),typeof r==`string`?n.ascendente?r.localeCompare(i):i.localeCompare(r):n.ascendente?r-i:i-r}),l(),o()}function l(){let e=document.querySelectorAll(`th`),t={"Numero Maglia":`#`,Cognome:`Giocatore`,partite:`PG`,punti:`PTS`,tl:`TL`,t2:`T2`,t3:`T3`};e.forEach(e=>{e.classList.remove(`sort-asc`,`sort-desc`),e.innerText.replace(/[▲▼]/g,``).trim()===t[n.colonna]&&e.classList.add(n.ascendente?`sort-asc`:`sort-desc`)})}window.forzaAggiornamentoRoster=u;function u(){localStorage.removeItem(`datiRoster`),localStorage.removeItem(`datiTutteLeStats`),location.reload()}async function d(){try{await window.registerUserId(),await r()}catch(e){console.error(`Errore durante l'avvio:`,e)}}d();
