@@ -3,8 +3,12 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Polismile YouTube Live Stats</title>
+  <title>YouTube Live Stats</title>
+
+  <meta name="theme-color" content="#2c3e50">
+  <link rel="icon" type="image/png" href="icon-192.png">
   <link rel="manifest" href="manifest.json">
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -16,9 +20,9 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/modulepreload-polyfill-kO9o6Ppo.js"></script>
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/common-C9uh-8eN.js"></script>
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/main-DluH1NIX.js"></script>
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/modulepreload-polyfill-BdxiBbhw.js"></script>
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/common-1knoj5Cb.js"></script>
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/main-DOszYDHu.js"></script>
   <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/main-DbZ7AZpq.css">
   <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/direttavideo-BJD_R03n.css">
 </head>
@@ -49,11 +53,6 @@
             <li class="menu-sort-item"><button onclick="window.setSortMode('cognome')"><i class="fas fa-sort-alpha-down"></i> Name</button></li>
             <li class="menu-sort-item"><button onclick="window.setSortMode('punti')"><i class="fas fa-star"></i> Score</button></li>
 
-            <!-- <li>
-              <button id="menuHighlightsBtn" onclick="toggleHighlights();">
-                <i class="fas fa-star"></i> Highlights
-              </button>
-            </li> -->
             <li>
               <button id="menuGraficoBtn" onclick="mostraGraficoPunteggio();">
                 <i class="fas fa-chart-line"></i> Grafico
@@ -89,39 +88,6 @@
             <div id="ytplayer-pip"></div>
         </div>
     </div>
-    <!-- <div id="transparent-overlay"></div>
-    <div id="ui-layer">
-        <div class="timeline-container" id="time-line-slider">
-            <input type="range" id="time-slider" min="0" value="0" step="1">
-        </div>
-        <div class="controls-bar">
-            <div class="btn-group">
-                <button id="btn-play-pause"><svg id="play-pause-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
-                <button id="btn-mute"><svg id="mute-icon" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg></button>
-                <span id="time-display">0:00 / 0:00</span>
-
-                <button id="btn-set-pip" title="Imposta PiP Tabellone">
-                    <svg viewBox="0 0 24 24"><path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14zm-10-7h9v6h-9z"/></svg>
-                </button>
-            </div>
-            <div class="btn-group">
-                <select id="select-quality">
-                    <option value="default" disabled selected>Risoluzione</option>
-                    <option value="hd1080">1080p</option>
-                    <option value="hd720">720p</option>
-                    <option value="large">480p</option>
-                    <option value="medium">360p</option>
-                    <option value="small">240p</option>
-                </select>
-                <select id="select-speed">
-                    <option value="0.5">0.5x</option>
-                    <option value="1" selected>1x</option>
-                    <option value="1.5">1.5x</option>
-                    <option value="2">2x</option>
-                </select>
-            </div>
-        </div>
-    </div> -->
 
     <div id="hud-overlay">
       <div id="hud-score" class="badge">
@@ -239,17 +205,8 @@
     </div>
   </div>
 
-  <!-- ------------------------------------------------------------------------- -->
-  <!-- Aggiornare la versione -->
-  <!-- ------------------------------------------------------------------------- -->
-
-  <!-- <script src="common.js?v=1.1.0"></script>
-  <script src="direttavideo-highlights.js?v=1.1.0"></script>
-  <script src="direttavideo-ytplayer.js?v=1.1.0"></script>
-  <script src="menus.js"></script> -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1"></script>  
-  <!-- <script src="direttavideo.js?v=1.1.0"></script> -->
   <script src="https://www.youtube.com/iframe_api"></script>
 </body>
 

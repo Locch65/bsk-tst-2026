@@ -6,6 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Polismile Basket App</title>
 
+    <meta name="theme-color" content="#2c3e50">
+    <link rel="icon" type="image/png" href="icon-192.png">
+    <link rel="manifest" href="manifest.json">
+
+
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>   
 
@@ -14,10 +19,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
     </style>
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/main-CB-eDK1T.js"></script>
-  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/modulepreload-polyfill-kO9o6Ppo.js">
-  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/common-C9uh-8eN.js">
-  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/main-DluH1NIX.js">
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/main-cNgMseSi.js"></script>
+  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/modulepreload-polyfill-BdxiBbhw.js">
+  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/common-1knoj5Cb.js">
+  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/main-DOszYDHu.js">
   <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/main-DbZ7AZpq.css">
   <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/main-BJkGFZO3.css">
 </head>
@@ -27,7 +32,7 @@
     <header>
         <div style="display: flex; flex-direction: column;">
             <h1>Polismile A - U14</h1>
-            <div class="app-version">Versione 1.1.0</div>
+            <div class="app-version">Versione 1.1.1</div>
         </div>
         <div style="display: flex; align-items: center; gap: 1rem;">
             <i class="fas fa-cog" id="btn-settings" style="font-size: 2.5rem; cursor: pointer; color: var(--primary);" onclick="window.apriPopupSettings()"></i>
@@ -82,46 +87,41 @@
         <div class="popup-content" style="max-width: 85%;">
             <h3 style="color: var(--primary); font-size: 2.2rem; margin-bottom: 1.5rem;">Impostazioni Colore</h3>
             
-            <!-- <div style="margin: 2rem 0;">
-                <input type="color" id="colorPicker" style="width: 100%; height: 80px; border: none; border-radius: 10px; cursor: pointer; background: none;">
-                <p id="rgbLabel" style="font-family: monospace; font-size: 1.8rem; margin-top: 1rem; color: var(--text-color);">RGB: #27ae60</p>
-            </div> -->
+            <div id="custom-picker-container" style="display: flex; flex-direction: column; gap: 1.5rem; margin: 2rem 0;">
+                
+                <div id="color-preview" style="width: 100%; height: 60px; border-radius: 10px; border: 2px solid #555; background: var(--primary);"></div>
 
-        <div id="custom-picker-container" style="display: flex; flex-direction: column; gap: 1.5rem; margin: 2rem 0;">
-            
-            <div id="color-preview" style="width: 100%; height: 60px; border-radius: 10px; border: 2px solid #555; background: var(--primary);"></div>
+                <div class="slider-group">
+                    <label>Tonalità: <span id="val-h">0</span>°</label>
+                    <input type="range" id="range-h" min="0" max="360" value="145" class="hsv-slider hue-gradient">
+                </div>
 
-            <div class="slider-group">
-                <label>Tonalità: <span id="val-h">0</span>°</label>
-                <input type="range" id="range-h" min="0" max="360" value="145" class="hsv-slider hue-gradient">
+                <div class="slider-group">
+                    <label>Saturazione: <span id="val-s">100</span>%</label>
+                    <input type="range" id="range-s" min="0" max="100" value="100" class="hsv-slider">
+                </div>
+
+                <div class="slider-group">
+                    <label>Luminosità: <span id="val-v">100</span>%</label>
+                    <input type="range" id="range-v" min="0" max="100" value="100" class="hsv-slider">
+                </div>
+
+                <p id="hexLabel" style="font-family: monospace; font-size: 1.8rem; text-align: center; color: var(--text-color);">#27AE60</p>
             </div>
 
-            <div class="slider-group">
-                <label>Saturazione: <span id="val-s">100</span>%</label>
-                <input type="range" id="range-s" min="0" max="100" value="100" class="hsv-slider">
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem;">
+                <button class="popup-btn" onclick="window.saveTheme()" style="background-color: var(--primary); flex: 1;">
+                    Salva
+                </button>
+                
+                <button class="popup-btn" onclick="window.resetTheme()" style="background-color: #666; flex: 1;">
+                    Reset
+                </button>
+                
+                <button class="popup-btn" onclick="window.chiudiPopupSettings()" style="background-color: #444; flex: 1;">
+                    Annulla
+                </button>
             </div>
-
-            <div class="slider-group">
-                <label>Luminosità: <span id="val-v">100</span>%</label>
-                <input type="range" id="range-v" min="0" max="100" value="100" class="hsv-slider">
-            </div>
-
-            <p id="hexLabel" style="font-family: monospace; font-size: 1.8rem; text-align: center; color: var(--text-color);">#27AE60</p>
-        </div>
-
-        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem;">
-            <button class="popup-btn" onclick="window.saveTheme()" style="background-color: var(--primary); flex: 1;">
-                Salva
-            </button>
-            
-            <button class="popup-btn" onclick="window.resetTheme()" style="background-color: #666; flex: 1;">
-                Reset
-            </button>
-            
-            <button class="popup-btn" onclick="window.chiudiPopupSettings()" style="background-color: #444; flex: 1;">
-                Annulla
-            </button>
-        </div>
 
         </div>
     </div>

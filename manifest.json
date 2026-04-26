@@ -1,21 +1,14 @@
 {
-  "name": "Polismile Basket App",
-  "short_name": "Basket",
-  "start_url": "index.html",
+  "name": "BASKET TEST 2026",
+  "short_name": "Bsk Test",
+  "start_url": "/bsk-tst-2026/index.html",
+  "scope": "/bsk-tst-2026/",
   "display": "standalone",
   "orientation": "any",
   "background_color": "#ffffff",
-  "theme_color": "#2c3e50",
+  "theme_color": "#e74c3c",
   "icons": [
-    {
-      "src": "icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
+    { "src": "icon-192-test.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512-test.png", "sizes": "512x512", "type": "image/png" }
   ]
 }
