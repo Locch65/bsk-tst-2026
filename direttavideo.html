@@ -14,17 +14,18 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>   
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
+  <script src="https://embed.twitch.tv/embed/v1.js"></script>
 
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/modulepreload-polyfill-BbIZms-q.js"></script>
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/common-CiTeLLVO.js"></script>
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/main-QNGZ5abN.js"></script>
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/modulepreload-polyfill-D5cAbT-c.js"></script>
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/common-DGa4v9Ez.js"></script>
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/main-OztsDmoz.js"></script>
   <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/main-DbZ7AZpq.css">
-  <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/direttavideo-Ch8cR2Jd.css">
+  <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/direttavideo-21HpIwcH.css">
 </head>
 
 <body>
@@ -32,6 +33,9 @@
     <button id="hamburgerBtn">☰</button>
     <button id="backBtn" onclick="history.back()" >
       <i class="fas fa-arrow-left"></i>   Back
+    </button>
+    <button id="stopVideoBtn" class="hidden">
+      <i class="fas fa-stop"></i> Stop Video
     </button>
     <nav id="menu" class="hidden">
       <ul>
@@ -83,6 +87,7 @@
       <p>Inizializzazione video...</p>
     </div>
     <div id="ytplayer"></div>
+    <div id="twitchplayer" class="hidden"></div>
     <div id="pip-container">
         <div id="pip-player-wrapper">
             <div id="ytplayer-pip"></div>
@@ -142,6 +147,11 @@
               <input type="number" id="highlight-duration" value="10" min="1" max="60">
               <span>s</span>
             </div>
+            <div class="ls-auto-wrapper">
+              <input type="checkbox" id="ls-auto-next-pt">
+              <label for="ls-auto-next-pt">AutoSkip</label>
+            </div>
+
           </div>
         </div>
       </div>
