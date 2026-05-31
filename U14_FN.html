@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Tabellone Torneo Basket</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+            overflow: hidden; 
+            width: 100vw;
+            height: 100vh;
+            user-select: none;
+        }
+
+        /* Schermata Poster Iniziale - OTTIMIZZATA PER NON TAGLIARE E INTERATTIVA */
+        #intro-poster {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #000000; 
+            background-image: url('U14_FN_Poster.jpeg');
+            background-size: contain; 
+            background-position: center center; 
+            background-repeat: no-repeat;
+            z-index: 9999; 
+            cursor: pointer; /* Fa capire all'utente che può cliccare per saltare */
+            transition: opacity 0.5s ease-out, visibility 0.5s;
+        }
+
+        #panzoom-container {
+            width: 100%;
+            height: 100%;
+            cursor: grab;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #panzoom-container:active {
+            cursor: grabbing;
+        }
+
+        .panzoom-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform-origin: 0 0;
+            will-change: transform;
+        }
+
+        #tournament-bracket {
+            display: flex;
+            gap: 160px; 
+            padding: 60px; 
+            align-items: center; 
+            width: max-content;
+            position: relative;
+            min-height: calc(100vh - 120px); 
+        }
+
+        #bracket-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .fase-container {
+            display: flex;
+            flex-direction: column; 
+            gap: 50px; 
+            background: rgba(255, 255, 255, 0.6);
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            min-width: 210px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .fase-title {
+            text-align: center;
+            font-weight: 800;
+            font-size: 1.1rem;
+            color: white;
+            background-color: #1e293b; 
+            padding: 8px 15px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .fase-date {
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: #94a3b8;
+            text-transform: none;
+            letter-spacing: 0.5px;
+        }
+
+        .bracket-column {
+            display: flex;
+            flex-direction: column;
+            gap: 20px; 
+        }
+
+        .column-title {
+            text-align: center;
+            font-weight: bold;
+            font-size: 0.85rem;
+            color: #475569;
+            text-transform: uppercase;
+            border-bottom: 2px solid #cbd5e1;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+            letter-spacing: 0.5px;
+        }
+
+        .match-box {
+            background: white;
+            border: 2px solid #cbd5e1;
+            border-radius: 6px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            width: 210px; 
+            overflow: hidden;
+            transition: border-color 0.3s;
+            position: relative; 
+        }
+
+        .match-box.gold-match {
+            background-color: #fef08a; 
+            border-color: #facc15;
+        }
+
+        .match-box.silver-match {
+            background-color: #e2e8f0; 
+            border-color: #94a3b8;
+        }
+
+        .match-box.active {
+            border-color: #ff6b00; 
+        }
+        
+        .match-box.gold-match.active,
+        .match-box.silver-match.active {
+            border-color: #ff6b00;
+        }
+
+        .match-id {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: #64748b;
+            color: white;
+            font-size: 0.65rem;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-bottom-left-radius: 4px;
+            pointer-events: none; 
+            z-index: 10;
+        }
+        
+        .match-box.active .match-id {
+            background: #ff6b00; 
+        }
+
+        .team-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 12px;
+            border-bottom: rgba(0, 0, 0, 0.05) 1px solid;
+            font-size: 0.85rem;
+        }
+
+        .team-row:last-child {
+            border-bottom: none;
+        }
+
+        .team-name {
+            color: #1e293b;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 120px;
+        }
+
+        .team-name.empty {
+            color: #94a3b8;
+            font-style: italic;
+        }
+
+        .team-score {
+            font-weight: bold;
+            color: #0f172a;
+            background: rgba(15, 23, 42, 0.06);
+            padding: 2px 6px;
+            border-radius: 4px;
+            min-width: 18px;
+            text-align: center;
+            margin-right: 18px; 
+            z-index: 5; 
+        }
+
+        .winner {
+            background-color: #e2f0d9 !important;
+            color: #385d25;
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000; 
+            display: flex;
+            gap: 10px;
+        }
+
+        .controls button {
+            padding: 10px 15px;
+            font-size: 14px;
+            font-weight: bold;
+            background-color: #ff6b00;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .controls button:hover {
+            background-color: #e05e00;
+        }
+
+        .mobile-hint {
+            position: fixed;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(15, 23, 42, 0.8);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.6rem;
+            pointer-events: none;
+            z-index: 1000;
+            display: none;
+        }
+
+        @media screen and (max-width: 768px) {
+            .mobile-hint {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="intro-poster"></div>
+
+    <div class="mobile-hint">📱 Trascina e pizzica per zoomare</div>
+
+    <div class="controls">
+        <button id="zoom-in">➕ Ingrandisci</button>
+        <button id="zoom-out">➖ Rimpicciolisci</button>
+        <button id="zoom-reset">🔄 Reset</button>
+    </div>
+
+    <div id="panzoom-container">
+        <div class="panzoom-wrapper" id="panzoom-wrapper">
+            <div id="tournament-bracket">
+                <svg id="bracket-lines"></svg>
+                Caricamento dati...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const SHEET_ID = '1Pa_oN5DpWO0t-e2iPKgFhAwqn728X0g3r330xJg8jsU'; 
+        const TAB_NAME = 'TABELLONE';
+        const DATE_TAB_NAME = 'DATE';
+        
+        const URL_TABELLONE = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${TAB_NAME}`;
+        const URL_DATE = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${DATE_TAB_NAME}`;
+
+        const container = document.getElementById('panzoom-container');
+        const wrapper = document.getElementById('panzoom-wrapper');
+        const bracket = document.getElementById('tournament-bracket');
+
+        let scale = window.innerWidth < 768 ? 0.35 : 0.65;
+        let pointX = 15;
+        let pointY = 15;
+        let start = { x: 0, y: 0 };
+        let isDragging = false;
+        let touchStartDist = 0;
+        let touchStartScale = 0;
+
+        function updateTransform() {
+            if (scale < 0.05) scale = 0.05;
+            if (scale > 3) scale = 3;
+            wrapper.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`;
+        }
+
+        // GESTIONE DEL TRASCINAMENTO E DELLO ZOOM
+        container.addEventListener('mousedown', (e) => {
+            if(e.target.closest('button')) return;
+            isDragging = true;
+            start = { x: e.clientX - pointX, y: e.clientY - pointY };
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            pointX = e.clientX - start.x;
+            pointY = e.clientY - start.y;
+            updateTransform();
+        });
+
+        window.addEventListener('mouseup', () => { isDragging = false; });
+
+        container.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            const xs = (e.clientX - pointX) / scale;
+            const ys = (e.clientY - pointY) / scale;
+            if (e.deltaY < 0) scale += 0.05;
+            else scale -= 0.05;
+            pointX = e.clientX - xs * scale;
+            pointY = e.clientY - ys * scale;
+            updateTransform();
+        }, { passive: false });
+
+        container.addEventListener('touchstart', (e) => {
+            if(e.target.closest('button')) return;
+            if (e.touches.length === 1) {
+                isDragging = true;
+                start = { x: e.touches[0].clientX - pointX, y: e.touches[0].clientY - pointY };
+            } else if (e.touches.length === 2) {
+                isDragging = false;
+                touchStartDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+                touchStartScale = scale;
+            }
+        });
+
+        container.addEventListener('touchmove', (e) => {
+            if (e.touches.length === 1 && isDragging) {
+                pointX = e.touches[0].clientX - start.x;
+                pointY = e.touches[0].clientY - start.y;
+                updateTransform();
+            } else if (e.touches.length === 2) {
+                const dist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+                const midX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+                const midY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+                const xs = (midX - pointX) / scale;
+                const ys = (midY - pointY) / scale;
+                scale = touchStartScale * (dist / touchStartDist);
+                pointX = midX - xs * scale;
+                pointY = midY - ys * scale;
+                updateTransform();
+            }
+        });
+
+        container.addEventListener('touchend', (e) => {
+            if (e.touches.length === 0) isDragging = false;
+            else if (e.touches.length === 1) {
+                isDragging = true;
+                start = { x: e.touches[0].clientX - pointX, y: e.touches[0].clientY - pointY };
+            }
+        });
+
+        document.getElementById('zoom-in').addEventListener('click', () => { scale += 0.1; updateTransform(); });
+        document.getElementById('zoom-out').addEventListener('click', () => { scale -= 0.1; updateTransform(); });
+        document.getElementById('zoom-reset').addEventListener('click', () => {
+            scale = window.innerWidth < 768 ? 0.35 : 0.65;
+            pointX = 15; pointY = 15;
+            updateTransform();
+        });
+
+        // LOGICA DI ACQUISIZIONE DATI PARALLELA (TABELLONE + DATE)
+        async function fetchBracketData() {
+            try {
+                const [respTabellone, respDate] = await Promise.all([
+                    fetch(URL_TABELLONE),
+                    fetch(URL_DATE)
+                ]);
+
+                const textTabellone = await respTabellone.text();
+                const textDate = await respDate.text();
+
+                const jsonTabellone = JSON.parse(textTabellone.substr(47).slice(0, -2));
+                const jsonDate = JSON.parse(textDate.substr(47).slice(0, -2));
+
+                const rowsMatches = jsonTabellone.table.rows;
+                const dataRowsMatches = (rowsMatches[0]?.c[0]?.v === 'ID' || rowsMatches[0]?.c[0]?.v === 'id') ? rowsMatches.slice(1) : rowsMatches;
+
+                // Mappatura delle date delle fasi
+                const dateMap = {};
+                const rowsDate = jsonDate.table.rows;
+                if (rowsDate && rowsDate.length > 0) {
+                    const startIdx = (rowsDate[0]?.c[0]?.v === 'Fase' || rowsDate[0]?.c[0]?.v === 'fase') ? 1 : 0;
+                    rowsDate.slice(startIdx).forEach(row => {
+                        const faseNome = row.c[0]?.v ? row.c[0].v.toString().trim().toUpperCase() : '';
+                        const faseDataVal = row.c[1]?.f || row.c[1]?.v || ''; 
+                        if (faseNome) {
+                            dateMap[faseNome] = faseDataVal;
+                        }
+                    });
+                }
+
+                // Mappatura dei Match
+                const matches = dataRowsMatches.map(row => {
+                    return {
+                        id: row.c[0]?.v ? row.c[0].v.toString().trim() : '',
+                        fase: row.c[1]?.v || '',
+                        turno: row.c[2]?.v || '',
+                        squadraA: (row.c[3]?.v !== undefined && row.c[3]?.v !== null) ? row.c[3].v : 'Da definire',
+                        squadraB: (row.c[4]?.v !== undefined && row.c[4]?.v !== null) ? row.c[4].v : 'Da definire',
+                        puntiA: (row.c[5]?.v !== undefined && row.c[5]?.v !== null) ? row.c[5].v : '',
+                        puntiB: (row.c[6]?.v !== undefined && row.c[6]?.v !== null) ? row.c[6].v : '',
+                        prossimaPartitaId: row.c[7]?.v ? row.c[7].v.toString().trim() : '',
+                        posizioneProssima: row.c[8]?.v ? row.c[8].v.toString().trim().toUpperCase() : '',
+                        prossimaPartitaIdPerdente: row.c[9]?.v ? row.c[9].v.toString().trim() : '',
+                        posizioneProssimaPerdente: row.c[10]?.v ? row.c[10].v.toString().trim().toUpperCase() : ''
+                    };
+                });
+
+                // Calcolo avanzamento logico vincenti/perdenti
+                matches.forEach(match => {
+                    const haPunti = match.puntiA !== '' && match.puntiB !== '';
+                    if (!haPunti) return;
+
+                    const isA_Winner = Number(match.puntiA) > Number(match.puntiB);
+                    const vincente = isA_Winner ? match.squadraA : match.squadraB;
+                    const perdente = isA_Winner ? match.squadraB : match.squadraA;
+                    
+                    if (match.prossimaPartitaId) {
+                        const targetMatchWin = matches.find(m => m.id === match.prossimaPartitaId);
+                        if (targetMatchWin) {
+                            const posWin = match.posizioneProssima;
+                            if (posWin === 'A' || posWin === 'SQUADRA_A') targetMatchWin.squadraA = vincente;
+                            else if (posWin === 'B' || posWin === 'SQUADRA_B') targetMatchWin.squadraB = vincente;
+                        }
+                    }
+
+                    if (match.prossimaPartitaIdPerdente) {
+                        const targetMatchLoss = matches.find(m => m.id === match.prossimaPartitaIdPerdente);
+                        if (targetMatchLoss) {
+                            const posLoss = match.posizioneProssimaPerdente;
+                            if (posLoss === 'A' || posLoss === 'SQUADRA_A') targetMatchLoss.squadraA = perdente;
+                            else if (posLoss === 'B' || posLoss === 'SQUADRA_B') targetMatchLoss.squadraB = perdente;
+                        }
+                    }
+                });
+
+                renderBracket(matches, dateMap);
+
+            } catch (error) {
+                console.error("Errore dati:", error);
+                bracket.innerHTML = "<p style='padding:20px;'>Errore nel caricamento dei dati dal foglio Google.</p>";
+            }
+        }
+
+        function renderBracket(matches, dateMap) {
+            bracket.innerHTML = '<svg id="bracket-lines"></svg>';
+
+            const orderOfFases = ['SEMIFINALI GOLD-SILVER', 'FINALI GOLD-SILVER', 'SEDICESIMI', 'OTTAVI', 'QUARTI', 'SEMIFINALI', 'FINALI'];
+            const dataStructure = {};
+
+            matches.forEach(match => {
+                if (!match.fase || !match.turno) return; 
+                const faseKey = match.fase.toString().trim().toUpperCase();
+                if (!dataStructure[faseKey]) {
+                    dataStructure[faseKey] = { orderOfTurns: [], turns: {} };
+                }
+                if (!dataStructure[faseKey].turns[match.turno]) {
+                    dataStructure[faseKey].turns[match.turno] = [];
+                    dataStructure[faseKey].orderOfTurns.push(match.turno);
+                }
+                dataStructure[faseKey].turns[match.turno].push(match);
+            });
+
+            orderOfFases.forEach(faseKey => {
+                if (!dataStructure[faseKey]) return;
+
+                const faseContainer = document.createElement('div');
+                faseContainer.className = 'fase-container';
+
+                const faseTitle = document.createElement('div');
+                faseTitle.className = 'fase-title';
+                
+                const dataTrovata = dateMap[faseKey] || '';
+                faseTitle.innerHTML = `
+                    <div>${faseKey.replace('_', ' ')}</div>
+                    ${dataTrovata ? `<div class="fase-date">📅 ${dataTrovata}</div>` : ''}
+                `;
+                faseContainer.appendChild(faseTitle);
+
+                dataStructure[faseKey].orderOfTurns.forEach(turno => {
+                    const column = document.createElement('div');
+                    column.className = 'bracket-column';
+
+                    const title = document.createElement('div');
+                    title.className = 'column-title';
+                    title.innerText = turno;
+                    column.appendChild(title);
+
+                    dataStructure[faseKey].turns[turno].forEach(match => {
+                        const matchBox = document.createElement('div');
+                        matchBox.className = 'match-box';
+                        matchBox.setAttribute('data-id', match.id); 
+                        
+                        if (match.prossimaPartitaId) matchBox.setAttribute('data-next-win', match.prossimaPartitaId);
+                        if (match.prossimaPartitaIdPerdente) matchBox.setAttribute('data-next-loss', match.prossimaPartitaIdPerdente);
+
+                        if (String(turno).toUpperCase().includes("GOLD")) matchBox.classList.add('gold-match');
+                        else if (String(turno).toUpperCase().includes("SILVER")) matchBox.classList.add('silver-match');
+
+                        if (match.puntiA !== '' || match.puntiB !== '') matchBox.classList.add('active');
+
+                        const isAFinale = match.puntiA !== '' && match.puntiB !== '';
+                        const winA = isAFinale && Number(match.puntiA) > Number(match.puntiB);
+                        const winB = isAFinale && Number(match.puntiB) > Number(match.puntiA);
+
+                        matchBox.innerHTML = `
+                            <div class="match-id">${match.id}</div>
+                            <div class="team-row ${winA ? 'winner' : ''}">
+                                <span class="team-name ${match.squadraA === 'Da definire' ? 'empty' : ''}">${match.squadraA}</span>
+                                <span class="team-score">${match.puntiA}</span>
+                            </div>
+                            <div class="team-row ${winB ? 'winner' : ''}">
+                                <span class="team-name ${match.squadraB === 'Da definire' ? 'empty' : ''}">${match.squadraB}</span>
+                                <span class="team-score">${match.puntiB}</span>
+                            </div>
+                        `;
+                        column.appendChild(matchBox);
+                    });
+                    faseContainer.appendChild(column);
+                });
+                bracket.appendChild(faseContainer);
+            });
+
+            updateTransform();
+            setTimeout(drawConnectorLines, 200);
+        }
+
+        function drawConnectorLines() {
+            const svg = document.getElementById('bracket-lines');
+            if (!svg) return;
+            svg.innerHTML = ''; 
+
+            const matchBoxes = document.querySelectorAll('.match-box');
+            const bracketRect = bracket.getBoundingClientRect();
+
+            matchBoxes.forEach(box => {
+                const boxId = box.getAttribute('data-id');
+                const nextWinId = box.getAttribute('data-next-win');
+                const nextLossId = box.getAttribute('data-next-loss');
+
+                const boxRect = box.getBoundingClientRect();
+                const startX = (boxRect.right - bracketRect.left) / scale;
+                const startY = (boxRect.top + boxRect.height / 2 - bracketRect.top) / scale;
+
+                const isConcluded = box.classList.contains('active');
+
+                if (nextWinId) {
+                    const targetBox = document.querySelector(`.match-box[data-id="${nextWinId}"]`);
+                    if (targetBox) {
+                        const targetRect = targetBox.getBoundingClientRect();
+                        const endX = (targetRect.left - bracketRect.left) / scale;
+                        const endY = (targetRect.top + targetRect.height / 2 - bracketRect.top) / scale;
+                        const lineColor = isConcluded ? '#2e7d32' : '#a7f3d0'; 
+                        createSvgPath(svg, startX, startY, endX, endY, lineColor, '0', "Vincente");
+                    }
+                }
+
+                if (nextLossId) {
+                    const targetBox = document.querySelector(`.match-box[data-id="${nextLossId}"]`);
+                    if (targetBox) {
+                        const targetRect = targetBox.getBoundingClientRect();
+                        const endX = (targetRect.left - bracketRect.left) / scale;
+                        const endY = (targetRect.top + targetRect.height / 2 - bracketRect.top) / scale;
+                        const lineColor = isConcluded ? '#c62828' : '#fecaca'; 
+                        createSvgPath(svg, startX, startY, endX, endY, lineColor, '0', "Perdente");
+                    }
+                }
+            });
+        }
+
+        function createSvgPath(svg, sx, sy, ex, ey, color, dashArray, tipo) {
+            const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            const dStr = `M ${sx} ${sy} L ${ex} ${ey}`;
+            path.setAttribute("d", dStr);
+            path.setAttribute("stroke", color);
+            path.setAttribute("stroke-width", "2.5");
+            path.setAttribute("fill", "none");
+            if (dashArray !== '0') {
+                path.setAttribute("stroke-dasharray", dashArray);
+            }
+            svg.appendChild(path);
+        }
+
+        window.addEventListener('resize', () => {
+            if(document.querySelector('.match-box')) drawConnectorLines();
+        });
+
+        // GESTIONE DELLA SCHERMATA D'INTRODUZIONE (POSTER)
+        fetchBracketData();
+
+        const poster = document.getElementById('intro-poster');
+        let introDismissed = false;
+
+        // Funzione centralizzata per chiudere il poster
+        function dismissIntro() {
+            if (introDismissed) return;
+            introDismissed = true;
+            poster.style.opacity = '0';
+            poster.style.visibility = 'hidden';
+            
+            // Forza un ricalcolo rapido delle linee vettoriali
+            setTimeout(() => {
+                if(document.querySelector('.match-box')) drawConnectorLines();
+            }, 100);
+        }
+
+        // Chiusura automatica dopo 3 secondi
+        const autoDismissTimeout = setTimeout(dismissIntro, 3000);
+
+        // Chiusura istantanea al clic del mouse o al tocco delle dita
+        poster.addEventListener('click', () => {
+            clearTimeout(autoDismissTimeout); // Cancella il timer per evitare doppie esecuzioni
+            dismissIntro();
+        });
+        poster.addEventListener('touchstart', (e) => {
+            e.preventDefault(); // Previene comportamenti indesiderati su mobile
+            clearTimeout(autoDismissTimeout);
+            dismissIntro();
+        }, { passive: false });
+    </script>
+</body>
+</html>
