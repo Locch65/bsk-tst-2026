@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Tabellone Finali Nazionali U14</title> 
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/modulepreload-polyfill-Ct5sdcNx.js"></script>
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/U14_FN-XwyXck4-.js"></script>
-  <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/u14_fn-oDmKBs1A.css">
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/modulepreload-polyfill-lFraSLZT.js"></script>
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/U14_FN-CmbNknIJ.js"></script>
+  <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/u14_fn-mj3sDwXQ.css">
 </head>
 <body>
 
@@ -42,9 +42,10 @@
     </div>
 
     <div class="controls">
+        <button id="show-classifica">🏆</button> 
         <button id="zoom-in">➕ Zoom</button>
         <button id="zoom-out">➖ Zoom</button>
-        <button id="zoom-reset">🔄 Reset</button>
+        <button id="zoom-reset">🔄 </button>
     </div>
 
     <div id="panzoom-container">
@@ -52,6 +53,32 @@
             <div id="tournament-bracket">
                 <svg id="bracket-lines"></svg>
                 Caricamento dati...
+            </div>
+        </div>
+    </div>
+
+    <div id="classifica-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Classifica Finali Nazionali U14</h2>
+                <button id="close-classifica" class="close-button">&times;</button>
+            </div>
+            <div class="modal-body">
+                <table class="classifica-table">
+                    <thead>
+                        <tr>
+                            <th>Pos</th>
+                            <th>Squadra</th>
+                            <th>Punti</th>
+                            <th>V</th>
+                            <th>S</th>
+                            <th>PF</th>
+                            <th>PS</th>
+                        </tr>
+                    </thead>
+                    <tbody id="classifica-tbody">
+                        </tbody>
+                </table>
             </div>
         </div>
     </div>
