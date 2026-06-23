@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Torneo FIT</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            user-select: none;
+            font-family: Arial, sans-serif;
+            touch-action: auto;
+        }
+        iframe {
+            border: none;
+            height: 100%;
+            width: 100%;
+            touch-action: auto;
+        }
+        
+        /* Struttura colonne */
+        #contenitore-sinistra, #contenitore-destra {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        #contenitore-sinistra { width: 100%; }
+        #drag-bar, #contenitore-destra { display: none; }
+        
+        .iframe-wrapper {
+            flex-grow: 1;
+            position: relative;
+            background: #fff;
+            padding-bottom: 60px; 
+            box-sizing: border-box;
+        }
+        
+        /* Barre dei bottoni ottimizzate */
+        .toolbar {
+            background-color: #f1f1f1;
+            padding: 10px;
+            display: flex;
+            gap: 10px;
+            border-bottom: 1px solid #ccc;
+            justify-content: center;
+            flex-wrap: wrap;
+            touch-action: auto;
+        }
+
+        /* Contenitore Intestazione */
+        .header-torneo {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding-bottom: 5px;
+        }
+        
+        .titolo-torneo {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+/*            text-transform: uppercase;*/
+            letter-spacing: 0.5px;
+        }
+
+        /* Bottone Più per Popup */
+        .btn-apri-popup {
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+        
+        /* Bottoni grandi per Mobile Touch */
+        .btn-azione {
+            padding: 6px 12px;
+            border: 1px solid #999;
+            background-color: #fff;
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            flex-grow: 1;
+            max-width: 170px;
+            text-align: center;
+        }
+        .btn-azione:hover { background-color: #e0e0e0; }
+        .btn-azione.attivo {
+            background-color: #0056b3;
+            color: white;
+            border-color: #004085;
+            font-weight: bold;
+        }
+
+        /* Stili del Popup Modale */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            user-select: text;
+        }
+        .modal-content h3 { margin-top: 0; margin-bottom: 15px; font-size: 18px; color: #333; }
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #666; }
+        .form-group input { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 14px; }
+        .modal-buttons { display: flex; gap: 10px; margin-top: 18px; justify-content: flex-end; }
+        .btn-modal { padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: bold; }
+        .btn-salva { background: #0056b3; color: white; }
+        .btn-chiudi { background: #6c757d; color: white; }
+
+        /* Layout Split Screen (Solo PC/Tablet) */
+        body.split-enabled #contenitore-sinistra { width: calc(50% - 3px); }
+        body.split-enabled #contenitore-destra { display: flex; width: calc(50% - 3px); }
+        body.split-enabled #drag-bar {
+            display: block;
+            width: 6px;
+            background-color: #ccc;
+            cursor: col-resize;
+            position: relative;
+            z-index: 20;
+        }
+        body.split-enabled #drag-bar:hover,
+        body.split-enabled #drag-bar.active {
+            background-color: #666;
+        }
+
+        .no-pointer { pointer-events: none !important; }
+    </style>
+</head>
+<body>
+
+    <div id="contenitore-sinistra">
+        <div class="toolbar" id="toolbar-sinistra">
+            <div class="header-torneo">
+                <div class="titolo-torneo" id="label-nome-torneo">Torneo SPORT VILLAGE BERTOLLA</div>
+                <button class="btn-apri-popup" id="btn-config">+</button>
+            </div>
+            <button class="btn-azione attivo" id="btn-qualificazioni">Qualificazioni</button>
+            <button class="btn-azione" id="btn-finale">Finale</button>
+        </div>
+        <div class="toolbar" id="toolbar-date"></div>
+        
+        <div class="iframe-wrapper">
+            <iframe src="" id="sinistra"></iframe>
+        </div>
+    </div>
+    
+    <div id="drag-bar"></div>
+    
+    <div id="contenitore-destra">
+        <div class="iframe-wrapper">
+            <iframe src="" id="destra"></iframe>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-config">
+        <div class="modal-content">
+            <h3>Configurazione Torneo</h3>
+            <div class="form-group">
+                <label>Nome Torneo</label>
+                <input type="text" id="input-nome">
+            </div>
+            <div class="form-group">
+                <label>ID Torneo</label>
+                <input type="text" id="input-id">
+            </div>
+            <div class="form-group">
+                <label>ID FASE 1 (Qualificazioni)</label>
+                <input type="text" id="input-fase1">
+            </div>
+            <div class="form-group">
+                <label>ID FASE 2 (Finale)</label>
+                <input type="text" id="input-fase2">
+            </div>
+            <div class="modal-buttons">
+                <button class="btn-modal btn-chiudi" id="btn-modal-chiudi">Chiudi</button>
+                <button class="btn-modal btn-salva" id="btn-modal-salva">Salva</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const leftIframe = document.getElementById('sinistra');
+        const rightIframe = document.getElementById('destra');
+        const leftContainer = document.getElementById('contenitore-sinistra');
+        const rightContainer = document.getElementById('contenitore-destra');
+        const divider = document.getElementById('drag-bar');
+        const toolbarDate = document.getElementById('toolbar-date');
+
+        // --- VALORI DI DEFAULT (FALLBACK) ---
+        const DEFAULT_NOME = "Torneo SPORT VILLAGE BERTOLLA";
+        const DEFAULT_ID = "5D5E6847-F66A-4427-BF78-DC8CB9AD29B4";
+        const DEFAULT_FASE1 = "3D4FDD1E-211D-4AA6-BAE9-8ED3F443ECA7";
+        const DEFAULT_FASE2 = "4D7218BA-DD69-4B84-8FCE-32AF1442D8D7";
+
+        // --- CARICAMENTO CONFIGURAZIONE DA LOCALSTORAGE O DEFAULT ---
+        const TOURNAMENT_NOME = localStorage.getItem('torneo_nome') || DEFAULT_NOME;
+        const TOURNAMENT_ID = localStorage.getItem('torneo_id') || DEFAULT_ID;
+        const FASE1 = localStorage.getItem('torneo_fase1') || DEFAULT_FASE1;
+        const FASE2 = localStorage.getItem('torneo_fase2') || DEFAULT_FASE2;
+
+        // Imposta dinamicamente la label del titolo
+        const labelNomeTorneo = document.getElementById('label-nome-torneo');
+        labelNomeTorneo.innerText = TOURNAMENT_NOME;
+
+        // URL parametrici con i dati attivi
+        const urlQualificazioni = `https://www.fitp.it/Tornei/Areas/Federtennis/Scripts/Puc/Tabellone_v2?tournamentId=${TOURNAMENT_ID}&phaseId=${FASE1}&intestazione=0&isDouble=0`;
+        const urlFinaleTabellone = `https://www.fitp.it/Tornei/Areas/Federtennis/Scripts/Puc/Tabellone_v2?tournamentId=${TOURNAMENT_ID}&phaseId=${FASE2}&intestazione=0&isDouble=0`;
+        const baseUrlDestra = `https://docs.google.com/gview?url=https://sgatapiexternalv2.azurewebsites.net/DigitalPlatform/getorderofplay?competitionUID=${TOURNAMENT_ID}%26fileName%3Dorariodigioco_`;
+        
+        let isSplitMode = false;
+
+        // Controllo Dispositivo
+        function checkSplitEligibility() {
+            const ua = navigator.userAgent.toLowerCase();
+            return !/mobile|android|iphone|ipad|phone/i.test(ua) || (window.screen.width >= 1024 || window.screen.height >= 1024);
+        }
+
+        // Inizializzazione Layout Condizionale
+        if (checkSplitEligibility()) {
+            isSplitMode = true;
+            document.body.classList.add('split-enabled');
+            rightContainer.insertBefore(toolbarDate, rightContainer.firstChild);
+            leftIframe.src = urlQualificazioni;
+        } else {
+            leftIframe.src = urlQualificazioni;
+        }
+
+        // --- GESTIONE POPUP MODALE ---
+        const modal = document.getElementById('modal-config');
+        
+        // Apri il popup e riempi gli input con i dati attuali
+        document.getElementById('btn-config').addEventListener('click', function() {
+            document.getElementById('input-nome').value = TOURNAMENT_NOME;
+            document.getElementById('input-id').value = TOURNAMENT_ID;
+            document.getElementById('input-fase1').value = FASE1;
+            document.getElementById('input-fase2').value = FASE2;
+            modal.style.display = 'flex';
+        });
+
+        // Chiudi il popup
+        document.getElementById('btn-modal-chiudi').addEventListener('click', function() {
+            modal.style.display = 'none';
+        });
+
+        // Salva le informazioni nel localStorage e ricarica la pagina
+        document.getElementById('btn-modal-salva').addEventListener('click', function() {
+            const nuovoNome = document.getElementById('input-nome').value.trim() || DEFAULT_NOME;
+            const nuovoId = document.getElementById('input-id').value.trim() || DEFAULT_ID;
+            const nuovaFase1 = document.getElementById('input-fase1').value.trim() || DEFAULT_FASE1;
+            const nuovaFase2 = document.getElementById('input-fase2').value.trim() || DEFAULT_FASE2;
+
+            // Salva nel localStorage
+            localStorage.setItem('torneo_nome', nuovoNome);
+            localStorage.setItem('torneo_id', nuovoId);
+            localStorage.setItem('torneo_fase1', nuovaFase1);
+            localStorage.setItem('torneo_fase2', nuovaFase2);
+            
+            // MODIFICATO: Cambia dinamicamente la label del titolo all'istante prima del reload
+            labelNomeTorneo.innerText = nuovoNome;
+
+            modal.style.display = 'none';
+            window.location.reload(); // Ricarica la pagina per applicare i nuovi URL
+        });
+
+        // --- GESTIONE BOTTONI TABELLONI ---
+        document.getElementById('btn-qualificazioni').addEventListener('click', function() {
+            disattivaBottoniDate();
+            document.getElementById('btn-finale').classList.remove('attivo');
+            this.classList.add('attivo');
+            leftIframe.src = urlQualificazioni;
+        });
+
+        document.getElementById('btn-finale').addEventListener('click', function() {
+            disattivaBottoniDate();
+            document.getElementById('btn-qualificazioni').classList.remove('attivo');
+            this.classList.add('attivo');
+            leftIframe.src = urlFinaleTabellone;
+        });
+
+        // --- GESTIONE BOTTONI DATE ---
+        function inizializzaBottoniDate() {
+            const opzioni = [{ etichetta: "Ieri", offset: -1 }, { etichetta: "Oggi", offset: 0 }, { etichetta: "Domani", offset: 1 }, { etichetta: "Dopodomani", offset: 2 }];
+            opzioni.forEach(opzione => {
+                const dataCorrente = new Date();
+                dataCorrente.setDate(dataCorrente.getDate() + opzione.offset);
+                const anno = dataCorrente.getFullYear();
+                const mese = String(dataCorrente.getMonth() + 1).padStart(2, '0');
+                const giorno = String(dataCorrente.getDate()).padStart(2, '0');
+                const dataUrl = `${anno}${mese}${giorno}`;
+                const dataBottone = `${giorno}/${mese}`;
+
+                const bottone = document.createElement('button');
+                bottone.className = 'btn-azione btn-data-classe';
+                bottone.innerText = `${opzione.etichetta} (${dataBottone})`;
+                
+                if (opzione.offset === 0 && isSplitMode) {
+                    bottone.classList.add('attivo');
+                    rightIframe.src = `${baseUrlDestra}${dataUrl}.pdf&embedded=true`;
+                }
+
+                bottone.addEventListener('click', function() {
+                    if (!isSplitMode) {
+                        document.getElementById('btn-qualificazioni').classList.remove('attivo');
+                        document.getElementById('btn-finale').classList.remove('attivo');
+                    }
+                    
+                    document.querySelectorAll('#toolbar-date .btn-azione').forEach(b => b.classList.remove('attivo'));
+                    bottone.classList.add('attivo');
+
+                    if (isSplitMode) {
+                        rightIframe.src = `${baseUrlDestra}${dataUrl}.pdf&embedded=true`;
+                    } else {
+                        leftIframe.src = `${baseUrlDestra}${dataUrl}.pdf&embedded=true`;
+                    }
+                });
+                toolbarDate.appendChild(bottone);
+            });
+        }
+
+        function disattivaBottoniDate() {
+            document.querySelectorAll('#toolbar-date .btn-azione').forEach(b => b.classList.remove('attivo'));
+        }
+
+        // Slider attivo solo in modalità Split Screen (PC)
+        if (isSplitMode) {
+            let isDragging = false;
+
+            divider.addEventListener('mousedown', () => {
+                isDragging = true;
+                divider.classList.add('active');
+                leftContainer.classList.add('no-pointer');
+                rightContainer.classList.add('no-pointer');
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                let percentage = (e.clientX / window.innerWidth) * 100;
+                if (percentage < 15) percentage = 15;
+                if (percentage > 85) percentage = 85;
+
+                leftContainer.style.width = `calc(${percentage}% - 3px)`;
+                rightContainer.style.width = `calc(${100 - percentage}% - 3px)`;
+            });
+
+            window.addEventListener('mouseup', () => {
+                if (isDragging) {
+                    isDragging = false;
+                    divider.classList.remove('active');
+                    leftContainer.classList.remove('no-pointer');
+                    rightContainer.classList.remove('no-pointer');
+                }
+            });
+        }
+        
+        inizializzaBottoniDate();
+    </script>
+</body>
+</html>
