@@ -1,0 +1,96 @@
+<div id="sezione-connessione-fitp" style="padding: 16px; border: 1px solid #ccc; border-radius: 8px; max-width: 400px; font-family: sans-serif;">
+    <h3>Sincronizzazione Account MyFIT</h3>
+    
+    <p><strong>Configurazione iniziale (solo la prima volta):</strong></p>
+    <p>1. Salva questa pagina nei tuoi Preferiti del telefono.</p>
+    <p>2. Modifica quel Preferito e imposta come indirizzo (URL) il codice che trovi qui sotto:</p>
+    
+    <textarea readonly style="width:100%; height: 70px; font-size: 11px; background: #f4f4f4;" onclick="this.select()">javascript:(function(){const t=sessionStorage.getItem("msal.idtoken")||localStorage.getItem("msal.idtoken");if(t){window.location.href="https://tuo-username.github.io/nome-repo/index.html?token="+encodeURIComponent(t);}else{alert("Token non trovato! Assicurati di aver effettuato il login e di essere nella bacheca di MyFIT.");}})();</textarea>
+
+    <p><strong>Uso quotidiano:</strong></p>
+    <p>3. Clicca sul pulsante qui sotto per accedere a MyFIT:</p>
+    <a href="https://my.fitp.it/" target="_blank" style="display:inline-block; background:#007bff; color:white; padding:10px 15px; border-radius:5px; text-decoration:none; font-weight:bold; margin-bottom: 15px;">Apri MyFIT ufficiale</a>
+
+    <p><em>Una volta effettuato il login sul sito della FITP, apri i preferiti del telefono e clicca sul preferito modificato al punto 2. Verrai riportato qui e l'app si configurerà da sola!</em></p>
+</div>
+
+<script>
+// Configurazione globale della sessione
+let sessioneMyFit = {
+    token: localStorage.getItem('myfit_token') || null,
+    datiBody: JSON.parse(localStorage.getItem('myfit_dati_body')) || null
+};
+
+// Controlla AUTOMATICAMENTE all'avvio se siamo tornati dal preferito magico con il token nell'URL
+async function controllaTokenDaURL() {
+    const parametri = new URLSearchParams(window.location.search);
+    const tokenURL = parametri.get('token');
+
+    if (tokenURL) {
+        console.log("Token ricevuto in modo sicuro via URL!");
+        
+        // Memorizza il token sul telefono
+        localStorage.setItem('myfit_token', tokenURL);
+        sessioneMyFit.token = tokenURL;
+
+        // Pulisce la barra degli indirizzi rimuovendo il codice lunghissimo (estetica e sicurezza)
+        window.history.replaceState({}, document.title, window.location.pathname);
+
+        // Interroga subito l'API di produzione della FITP per l'hashKey fresco
+        await inizializzaDatiProfilo(tokenURL);
+    }
+}
+
+// Avvia il controllo ad ogni caricamento
+window.addEventListener('DOMContentLoaded', controllaTokenDaURL);
+
+// La funzione che interroga il server (rimane identica a prima)
+async function inizializzaDatiProfilo(token) {
+    const guidUtenteFisso = "4a6d96c2-dedd-4bb1-8f07-f7444047b1b3";
+    const b2cGuidFisso = "b7478c31-1eb7-4193-ac4d-a32f7276800b";
+
+    const bodyIniziale = {
+        guid: guidUtenteFisso, member: "1", teacher: "0", udg: "0", acceptProfilation: "0",
+        hashKey: "", b2cGuid: b2cGuidFisso, fromTpra: false, key: guidUtenteFisso
+    };
+
+    try {
+        const response = await fetch("https://dp-myfit-test-function-v2.azurewebsites.net/api/v1/login/profilo/get", {
+            method: "POST",
+            mode: "cors",
+            credentials: "include",
+            headers: {
+                "Accept": "application/json, text/javascript, */*; q=0.01",
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+                "Referer": "https://www.fitp.it/"
+            },
+            body: JSON.stringify(bodyIniziale)
+        });
+
+        if (response.ok) {
+            const resData = await response.json();
+            if (resData && resData.profilo && resData.profilo[0]) {
+                const infoProfilo = resData.profilo[0];
+                
+                sessioneMyFit.datiBody = {
+                    guid: infoProfilo.guid,
+                    member: String(infoProfilo.member),
+                    teacher: String(infoProfilo.teacher),
+                    udg: String(infoProfilo.udg),
+                    acceptProfilation: String(infoProfilo.acceptProfilation),
+                    hashKey: infoProfilo.hashKey, // <--- Aggiornato dinamicamente!
+                    b2cGuid: infoProfilo.b2cGuid,
+                    fromTpra: infoProfilo.from_Tpra,
+                    key: infoProfilo.guid
+                };
+
+                localStorage.setItem('myfit_dati_body', JSON.stringify(sessioneMyFit.datiBody));
+                alert("Sincronizzazione completata con successo!");
+            }
+        }
+    } catch (err) {
+        console.error("Errore nel recupero del profilo:", err);
+    }
+}
+</script>
