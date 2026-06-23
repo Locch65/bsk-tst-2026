@@ -5,7 +5,7 @@
     <p>1. Salva questa pagina nei tuoi Preferiti del telefono.</p>
     <p>2. Modifica quel Preferito e imposta come indirizzo (URL) il codice che trovi qui sotto:</p>
     
-    <textarea readonly style="width:100%; height: 70px; font-size: 11px; background: #f4f4f4;" onclick="this.select()">javascript:(function(){const t=sessionStorage.getItem("msal.idtoken")||localStorage.getItem("msal.idtoken");if(t){window.location.href="https://tuo-username.github.io/nome-repo/index.html?token="+encodeURIComponent(t);}else{alert("Token non trovato! Assicurati di aver effettuato il login e di essere nella bacheca di MyFIT.");}})();</textarea>
+    <textarea readonly style="width:100%; height: 70px; font-size: 11px; background: #f4f4f4;" onclick="this.select()">javascript:(function(){const t=localStorage.getItem('token')||localStorage.getItem('tokenAdb2c');if(t){window.location.href="https://locch65.github.io/bsk-tst-2026/fit3.html?token="+encodeURIComponent(t);}else{alert("Token non trovato! Assicurati di aver fatto il login e di trovarti sulla bacheca MyFIT.");}})();</textarea>
 
     <p><strong>Uso quotidiano:</strong></p>
     <p>3. Clicca sul pulsante qui sotto per accedere a MyFIT:</p>
@@ -50,20 +50,27 @@ async function inizializzaDatiProfilo(token) {
     const b2cGuidFisso = "b7478c31-1eb7-4193-ac4d-a32f7276800b";
 
     const bodyIniziale = {
-        guid: guidUtenteFisso, member: "1", teacher: "0", udg: "0", acceptProfilation: "0",
-        hashKey: "", b2cGuid: b2cGuidFisso, fromTpra: false, key: guidUtenteFisso
+        guid: guidUtenteFisso,
+        member: "1",
+        teacher: "0",
+        udg: "0",
+        acceptProfilation: "0",
+        hashKey: "", 
+        b2cGuid: b2cGuidFisso,
+        fromTpra: false,
+        key: guidUtenteFisso
     };
 
     try {
+        // MODIFICA FONDAMENTALE: Rimuoviamo credentials: "include" e puliamo gli headers.
+        // AzureWebsites accetta il Bearer Token nell'Authorization senza bisogno di ereditare i cookie di sessione.
         const response = await fetch("https://dp-myfit-test-function-v2.azurewebsites.net/api/v1/login/profilo/get", {
             method: "POST",
-            mode: "cors",
-            credentials: "include",
+            mode: "cors", // Mantiene la modalità CORS standard
             headers: {
-                "Accept": "application/json, text/javascript, */*; q=0.01",
+                "Accept": "application/json, text/plain, */*",
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`,
-                "Referer": "https://www.fitp.it/"
+                "Authorization": `Bearer ${token}`
             },
             body: JSON.stringify(bodyIniziale)
         });
@@ -79,18 +86,73 @@ async function inizializzaDatiProfilo(token) {
                     teacher: String(infoProfilo.teacher),
                     udg: String(infoProfilo.udg),
                     acceptProfilation: String(infoProfilo.acceptProfilation),
-                    hashKey: infoProfilo.hashKey, // <--- Aggiornato dinamicamente!
+                    hashKey: infoProfilo.hashKey, // <--- Ecco l'hashKey che stavamo cercando!
                     b2cGuid: infoProfilo.b2cGuid,
                     fromTpra: infoProfilo.from_Tpra,
                     key: infoProfilo.guid
                 };
 
                 localStorage.setItem('myfit_dati_body', JSON.stringify(sessioneMyFit.datiBody));
-                alert("Sincronizzazione completata con successo!");
+                console.log("Sincronizzazione completata!", sessioneMyFit.datiBody);
+                alert("Sincronizzazione completata con successo! Ora puoi usare l'app.");
+            } else {
+                alert("Profilo non trovato nella risposta del server.");
             }
+        } else {
+            console.error("Il server ha risposto con un errore:", response.status);
+            alert("Il server FITP ha rifiutato la richiesta. Codice: " + response.status);
         }
     } catch (err) {
         console.error("Errore nel recupero del profilo:", err);
+        
+        // Se continua a dare TypeError (CORS duro lato Azure), ti mostro l'alternativa immediata tramite Proxy
+        alert("Blocco CORS rilevato. Tento il recupero alternativo...");
+        await inizializzaDatiProfiloConProxy(token, bodyIniziale);
+    }
+}
+
+/**
+ * Funzione di riserva (Fallback) se l'endpoint Azure blocca l'origine GitHub Pages a livello di infrastruttura.
+ * Sfrutta un proxy CORS gratuito per ripulire l'origine della richiesta.
+ */
+async function inizializzaDatiProfiloConProxy(token, bodyIniziale) {
+    // Usiamo il proxy CORS pubblico più affidabile
+    const urlProxy = "https://corsproxy.io/?" + encodeURIComponent("https://dp-myfit-test-function-v2.azurewebsites.net/api/v1/login/profilo/get");
+
+    try {
+        const response = await fetch(urlProxy, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify(bodyIniziale)
+        });
+
+        if (response.ok) {
+            const resData = await response.json();
+            if (resData && resData.profilo && resData.profilo[0]) {
+                const infoProfilo = resData.profilo[0];
+                
+                sessioneMyFit.datiBody = {
+                    guid: infoProfilo.guid,
+                    member: String(infoProfilo.member),
+                    teacher: String(infoProfilo.teacher),
+                    udg: String(infoProfilo.udg),
+                    acceptProfilation: String(infoProfilo.acceptProfilation),
+                    hashKey: infoProfilo.hashKey,
+                    b2cGuid: infoProfilo.b2cGuid,
+                    fromTpra: infoProfilo.from_Tpra,
+                    key: infoProfilo.guid
+                };
+
+                localStorage.setItem('myfit_dati_body', JSON.stringify(sessioneMyFit.datiBody));
+                alert("Sincronizzazione completata via Proxy con successo!");
+            }
+        }
+    } catch (e) {
+        console.error("Errore anche con il proxy:", e);
+        alert("Impossibile bypassare il blocco di rete della FITP.");
     }
 }
 </script>
