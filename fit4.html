@@ -392,7 +392,8 @@
         const btnSitoFitp = document.getElementById('btn-sito-fitp');
         const btnAggiornaBackend = document.getElementById('btn-aggiorna-backend');
 
-        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby_NpZm3n0j4qEtWjqtbXnNDt5s13fMHQrLervyHIf8PNRbIbGN4PX8gojlXYQPEFXk/exec";
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbybtjoo3z8GQEMe08oWvaz8Ifh1CK6yF7h7yBM74hTnS7EmZ3wOZqRq7Jv948KCUIvl/exec";
+        //"https://script.google.com/macros/s/AKfycby_NpZm3n0j4qEtWjqtbXnNDt5s13fMHQrLervyHIf8PNRbIbGN4PX8gojlXYQPEFXk/exec";
         //"https://script.google.com/macros/s/AKfycbydUFDYle4TYZzUhSy2r1p-40JLTB40TKxaA_uMXID3QlsnkjrgDbvsIF6oR7kNgiId/exec";
 
         // --- POPUP ISTRUZIONI INTEGRATE ---
@@ -567,30 +568,38 @@
         }
 
         // --- BOTTONE AGGIORNA: CHIAMATA AL BACKEND DI GOOGLE APPS SCRIPT ---
-        // --- BOTTONE AGGIORNA: CHIAMATA AL BACKEND DI GOOGLE APPS SCRIPT ---
+        // Funzione di supporto per attendere qualche millisecondo tra le chiamate ed evitare il blocco del browser
+// --- BOTTONE AGGIORNA: CHIAMATA AL BACKEND (FETCH STANDARD COME PWA) ---
         btnAggiornaBackend.addEventListener('click', async () => {
             btnAggiornaBackend.innerText = "Caricamento...";
             btnAggiornaBackend.disabled = true;
 
             try {
-                // 1. Legge la lista principale dei tornei dal backend (Senza impostare mode: 'cors' per far digerire i redirect)
+                // 1. Chiamata principale identica alla tua PWA
                 const response = await fetch(GOOGLE_SCRIPT_URL);
                 const data = await response.json();
 
-                // Controllo flessibile: accetta sia { tornei: [...] } sia l'array diretto o incapsulato in sectionIds
+                // Gestiamo in modo flessibile la struttura dati restituita (array diretto o sotto .tornei)
                 const listaTorneiEstratta = data.tornei || (Array.isArray(data) ? data : null);
 
                 if (listaTorneiEstratta && Array.isArray(listaTorneiEstratta)) {
                     let nuovaLista = [];
 
-                    // 2. Per ciascun torneo, esegue una seconda chiamata per estrarre le sezioni/fasi
+                    // 2. Ciclo sui tornei ricevuti dal backend
                     for (let t of listaTorneiEstratta) {
                         let fase1 = "";
                         let fase2 = "";
 
-                        if (t.id_competizione) {
+                        // Recuperiamo il codice competizione corretto dal JSON (competitionUid)
+                        const compUid = t.competitionUid || t.id_competizione;
+
+                        if (compUid) {
+                            // Introduciamo un piccolissimo ritardo di 150ms prima di ogni fetch successiva 
+                            // per evitare rate-limit o blocchi sulle connessioni simultanee del browser
+                            //await delay(150);
+
                             try {
-                                const urlSezioni = `${GOOGLE_SCRIPT_URL}?competitionUid=${encodeURIComponent(t.id_competizione)}`;
+                                const urlSezioni = `${GOOGLE_SCRIPT_URL}?competitionUid=${encodeURIComponent(compUid)}`;
                                 const resSezioni = await fetch(urlSezioni);
                                 const dataSezioni = await resSezioni.json();
                                 
@@ -601,15 +610,22 @@
                                     fase2 = sorgenteSezioni.idSection2 || "";
                                 }
                             } catch (errSec) {
-                                console.error(`Errore nel caricamento sezioni per competizione ${t.id_competizione}:`, errSec);
+                                console.error(`Errore sezioni per competizione ${compUid}:`, errSec);
                             }
                         }
 
+                        // Genera un nome combinato chiaro (es: Nome Torneo - Singolare Femminile Under 14)
+                        let nomeVisualizzato = t.nomeTorneo || t.nome || "Torneo FITP";
+                        if (t.descrizioneTorneo) {
+                            nomeVisualizzato += ` - ${t.descrizioneTorneo}`;
+                        }
+
+                        // Inserimento mappato sulla nuova struttura dati basata sul tuo JSON reale
                         nuovaLista.push({
                             id_locale: t.id_locale || String(Date.now() + Math.random()),
-                            nome: t.nome || "Torneo FITP",
-                            id_competizione: t.id_competizione || "",
-                            id_torneo: t.id_torneo || t.id_competizione || "",
+                            nome: nomeVisualizzato,
+                            id_competizione: compUid || "",
+                            id_torneo: t.uidTorneo || t.id_torneo || compUid || "", // Prende uidTorneo (UID stringa)
                             fase1: fase1,
                             fase2: fase2
                         });
@@ -626,13 +642,13 @@
                         alert("Elenco tornei sincronizzato e aggiornato con successo dal backend!");
                         renderListaTornei();
                     } else {
-                        alert("Il backend ha restituito un elenco vuoto o non compatibile.");
+                        alert("Il backend ha restituito un elenco vuoto.");
                     }
                 } else {
-                    alert("Formato dati non riconosciuto. Verifica la struttura restituita da getCompetitionsList().");
+                    alert("Formato dati non riconosciuto dal backend.");
                 }
             } catch (error) {
-                alert("Errore di rete o CORS: " + error.toString() + "\nProva ad aggiornare l'autorizzazione dello script.");
+                alert("Errore di rete durante l'aggiornamento: " + error.toString());
                 console.error(error);
             } finally {
                 btnAggiornaBackend.innerText = "Aggiorna Elenco";
