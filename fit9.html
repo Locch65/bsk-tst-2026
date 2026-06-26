@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>I Miei Tornei FITP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            user-select: none;
+            font-family: Arial, sans-serif;
+            touch-action: auto;
+        }
+        iframe {
+            border: none;
+            height: 100%;
+            width: 100%;
+            touch-action: auto;
+        }
+        
+        /* Struttura colonne */
+        #contenitore-sinistra, #contenitore-destra {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        #contenitore-sinistra { width: 100%; }
+        #drag-bar, #contenitore-destra { display: none; }
+        
+        .iframe-wrapper {
+            flex-grow: 1;
+            position: relative;
+            background: #fff;
+            padding-bottom: 60px; 
+            box-sizing: border-box;
+        }
+        
+        /* Barre dei bottoni */
+        .toolbar {
+            background-color: #f1f1f1;
+            padding: 10px;
+            display: flex;
+            gap: 10px;
+            border-bottom: 1px solid #ccc;
+            justify-content: center;
+            flex-wrap: wrap;
+            touch-action: auto;
+        }
+
+        /* Box Istruzioni Integrato */
+        .box-istruzioni {
+            background: #fff3cd; 
+            color: #856404; 
+            padding: 8px 12px; 
+            border-radius: 6px; 
+            font-weight: bold; 
+            font-size: 13px; 
+            border: 1px solid #ffeeba;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+        }
+        .btn-link-istruzioni {
+            background: #856404;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            font-size: 11px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        /* Contenitore Intestazione */
+        .header-torneo {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding-bottom: 5px;
+        }
+        
+        /* Bottone Selettore Principale (Verde) */
+        .btn-seleziona-torneo {
+            background: #28a745;
+            color: white;
+            border: 1px solid #1e7e34;
+            padding: 6px 16px;
+            font-size: 15px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            max-width: 60%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: background 0.2s;
+        }
+        .btn-seleziona-torneo:hover { background: #218838; }
+
+        /* Bottone Collegamento Esterno FITP */
+        .btn-link-fitp {
+            background: #007bff;
+            color: white;
+            border: 1px solid #0069d9;
+            padding: 6px 14px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            transition: background 0.2s;
+        }
+        .btn-link-fitp:hover { background: #0062cc; }
+        
+        /* Bottoni Azione e Dropdown */
+        .btn-azione, .select-azione {
+            padding: 6px 12px;
+            border: 1px solid #999;
+            background-color: #fff;
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            flex-grow: 1;
+            max-width: 170px;
+            text-align: center;
+            box-sizing: border-box;
+        }
+        .select-azione {
+            text-align-last: center;
+            height: 31px;
+        }
+        .btn-azione:hover, .select-azione:hover { background-color: #e0e0e0; }
+        .btn-azione.attivo, .select-azione.attivo {
+            background-color: #0056b3;
+            color: white;
+            border-color: #004085;
+            font-weight: bold;
+        }
+        .select-azione.attivo option {
+            color: black;
+            background-color: white;
+            font-weight: normal;
+        }
+        .btn-azione:disabled, .select-azione:disabled {
+            background-color: #e9ecef;
+            color: #adb5bd;
+            border-color: #ced4da;
+            cursor: not-allowed;
+        }
+
+        /* Stili dei Popup Modali */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 460px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            user-select: text;
+            display: flex;
+            flex-direction: column;
+            max-height: 90vh;
+        }
+        .modal-header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+            gap: 10px;
+        }
+        .modal-header-container h3 { margin: 0; font-size: 18px; color: #333; }
+        
+        .btn-modal { padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: bold; }
+        .btn-chiudi { background: #6c757d; color: white; width: 100%; }
+        .btn-info { background: #007bff; color: white; padding: 6px 12px; font-size: 13px; border-radius: 4px; }
+        
+        .modal-close-container {
+            border-top: 1px solid #eee; 
+            padding-top: 15px;
+            margin-top: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+        }
+
+        /* Lista Tornei Interna al Popup */
+        .lista-tornei-container {
+            max-height: 55vh;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .torneo-item {
+            padding: 12px 10px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fff;
+            transition: background 0.15s;
+        }
+        .torneo-item:last-child { border-bottom: none; }
+        .torneo-item:hover { background: #f1f3f5; }
+        .torneo-item.selezionato { background: #e2f0fe; }
+        
+        .torneo-item-info {
+            flex-grow: 1;
+            white-space: normal;
+            word-break: break-word;
+        }
+
+        /* Layout Split Screen */
+        body.split-enabled #contenitore-sinistra { width: calc(50% - 3px); }
+        body.split-enabled #contenitore-destra { display: flex; width: calc(50% - 3px); }
+        body.split-enabled #drag-bar {
+            display: block;
+            width: 6px;
+            background-color: #ccc;
+            cursor: col-resize;
+            position: relative;
+            z-index: 20;
+        }
+        body.split-enabled #drag-bar:hover,
+        body.split-enabled #drag-bar.active { background-color: #666; }
+
+        .no-pointer { pointer-events: none !important; }
+
+        /* Stile testo istruzioni nel modal */
+        .testo-istruzioni ol { padding-left: 20px; font-size: 14px; line-height: 1.5; color: #333; }
+        .testo-istruzioni li { margin-bottom: 8px; }
+        .code-box { background: #f4f4f4; padding: 6px; border: 1px solid #ddd; font-family: monospace; font-size: 11px; word-break: break-all; border-radius: 4px; display: block; margin-top: 5px; user-select: all;}
+        
+        /* Bottone Sito Web dentro il Popup Istruzioni */
+        .btn-popup-sitofitp {
+            background-color: #007bff;
+            color: white;
+            border: 1px solid #0069d9;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            transition: background 0.2s;
+            width: 80%;
+            margin-bottom: 5px;
+        }
+        .btn-popup-sitofitp:hover { background-color: #0062cc; }
+        
+        /* Animazione Lampeggiante (Blink) */
+        @keyframes blinker {
+            50% { opacity: 0; }
+        }
+        .blink-loading {
+            animation: blinker 1.0s linear infinite;
+            color: #ffc107 !important;
+        }
+
+        /* Classe di blocco per impedire la selezione */
+        .disabilita-interazioni {
+            pointer-events: none !important;
+            opacity: 0.6;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="contenitore-sinistra">
+        <div class="toolbar" id="toolbar-sinistra">
+            <div class="box-istruzioni">
+                <span>Aggiorna o sincronizza la sessione tramite Bookmarklet</span>
+                <button class="btn-link-istruzioni" id="btn-apri-istruzioni">Leggi Istruzioni</button>
+            </div>
+            
+            <div class="header-torneo">
+                <button class="btn-seleziona-torneo" id="btn-cambia-torneo">Caricamento...</button>
+                <a href="#" target="_blank" class="btn-link-fitp" id="btn-sito-fitp">Sito FITP</a>
+            </div>
+            <select class="select-azione attivo" id="dropdown-qualificazioni">
+                <option value="">Qualificazioni</option>
+            </select>
+            <button class="btn-azione" id="btn-finale">Finale</button>
+        </div>
+        <div class="toolbar" id="toolbar-date"></div>
+        
+        <div class="iframe-wrapper">
+            <iframe src="" id="sinistra"></iframe>
+        </div>
+    </div>
+    
+    <div id="drag-bar"></div>
+    
+    <div id="contenitore-destra">
+        <div class="iframe-wrapper">
+            <iframe src="" id="destra"></iframe>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-lista">
+        <div class="modal-content">
+            <div class="modal-header-container">
+                <h3>Seleziona Torneo:</h3>
+                <button class="btn-modal btn-info" id="btn-aggiorna-backend">Aggiorna Elenco</button>
+            </div>
+            <div class="lista-tornei-container" id="lista-tornei-render"></div>
+            <div class="modal-close-container">
+                <button class="btn-modal btn-chiudi" id="btn-lista-chiudi">Chiudi</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-istruzioni">
+        <div class="modal-content" style="max-width: 500px;">
+            <h3>Guida Sincronizzazione Sessione</h3>
+            <div class="testo-istruzioni">
+                <p>Per vedere i tabelloni direttamente nell'app senza blocchi, segui questa procedura:</p>
+                <ol>
+                    <li>Crea un Preferito (Segnalibro) sul tuo browser del telefono e chiamalo <strong>"Sincronizza FITP"</strong>.</li>
+                    <li>Modifica il Preferito appena creato e incolla questo codice esatto nel campo dell'indirizzo (URL):
+                        <span class="code-box">javascript:(function(){const t=localStorage.getItem('token');const h=localStorage.getItem('hashKey');const g=localStorage.getItem('guid');if(t&&h&&g){window.location.href="https://locch65.github.io/bsk-tst-2026/fit2.html?token="+encodeURIComponent(t)+"&hashKey="+encodeURIComponent(h)+"&guid="+encodeURIComponent(g);}else{alert("Dati non trouvati! Assicurati di essere sul sito FITP e di aver fatto il login.");}})();</span>
+                    </li>
+                    <li>Vai sul sito ufficiale ed effettua l'accesso con le tue credenziali.</li>
+                    <li>Una volta effettuato l'accesso alla tua area personale, apri i preferiti del telefono e primi sul segnalibro <strong>"Sincronizza FITP"</strong> creato prima.</li>
+                </ol>
+                <p style="font-size: 13px; color: #666; font-style: italic;">Sarete reindirizzati automaticamente qui e la sessione sarà attiva.</p>
+            </div>
+            <div class="modal-close-container">
+                <a href="https://my.fitp.it/" target="_blank" class="btn-popup-sitofitp">Apri sito myfit.fitp.it</a>
+                <button class="btn-modal btn-chiudi" id="btn-istruzioni-chiudi">Ho capito</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Cattura globale degli errori per facilitare il debug su smartphone
+        window.onerror = function(message, source, lineno, colno, error) {
+            alert("ERRORE JAVASCRIPT RISCONTRATO:\n\nMessaggio: " + message + "\nFile: " + source + "\nLinea: " + lineno);
+            return false;
+        };
+
+        try {
+            const leftIframe = document.getElementById('sinistra');
+            const rightIframe = document.getElementById('destra');
+            const leftContainer = document.getElementById('contenitore-sinistra');
+            const rightContainer = document.getElementById('contenitore-destra');
+            const divider = document.getElementById('drag-bar');
+            const toolbarDate = document.getElementById('toolbar-date');
+            const dropdownQualificazioni = document.getElementById('dropdown-qualificazioni');
+            const btnFinale = document.getElementById('btn-finale');
+            const btnCambiaTorneo = document.getElementById('btn-cambia-torneo');
+            const btnSitoFitp = document.getElementById('btn-sito-fitp');
+            const btnAggiornaBackend = document.getElementById('btn-aggiorna-backend');
+            const btnListaChiudi = document.getElementById('btn-lista-chiudi');
+
+            const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz_Auv1rSjdp1KbyZIVb5_sTvrXK42OgobpBaSRkbTIkBxqaaK9phKLEfGBn4LadttK/exec";
+
+            // --- POPUP ISTRUZIONI INTEGRATE ---
+            const modalIstruzioni = document.getElementById('modal-istruzioni');
+            document.getElementById('btn-apri-istruzioni').addEventListener('click', () => modalIstruzioni.style.display = 'flex');
+            document.getElementById('btn-istruzioni-chiudi').addEventListener('click', () => modalIstruzioni.style.display = 'none');
+
+            // --- ABILITAZIONE TASTO CHIUDI POPUP ---
+            const modalLista = document.getElementById('modal-lista');
+            btnListaChiudi.addEventListener('click', () => modalLista.style.display = 'none');
+
+            // --- STATO DELLA SESSIONE REALE ---
+            let sessioneMyFit = {
+                token: localStorage.getItem('myfit_token') || null,
+                datiBody: JSON.parse(localStorage.getItem('myfit_dati_body')) || null
+            };
+
+            function controllaTokenDaURL() {
+                const parametri = new URLSearchParams(window.location.search);
+                const tokenURL = parametri.get('token');
+                const hashKeyURL = parametri.get('hashKey');
+                const guidURL = parametri.get('guid');
+
+                if (tokenURL && hashKeyURL && guidURL) {
+                    localStorage.setItem('myfit_token', tokenURL);
+                    sessioneMyFit.token = tokenURL;
+                    sessioneMyFit.datiBody = {
+                        guid: guidURL, member: "1", teacher: "0", udg: "0",
+                        acceptProfilation: "0", hashKey: hashKeyURL, 
+                        b2cGuid: "b7478c31-1eb7-4193-ac4d-a32f7276800b",
+                        fromTpra: false, key: guidURL
+                    };
+                    localStorage.setItem('myfit_dati_body', JSON.stringify(sessioneMyFit.datiBody));
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                    alert("Sincronizzazione completata con successo!");
+                }
+            }
+            controllaTokenDaURL();
+
+            // --- STRUTTURA DATI E LOCALSTORAGE ---
+            const DEFAULT_TORNEI = [
+                { id_locale: "1", nome: "Singolare Gara Esempio", tennisClub: "Torneo Green Park", id_competizione: "338EDFBC-15E8-4D5E-8BA2-A5B4CBFF4E01", id_torneo: "9989D074-DB84-4CA6-943A-D16643E4A1CD", fase1: "", fase2: "D88D6A9F-EFB8-4599-B725-1804F221C88A", dataInizio: "01/06/2026", dataFine: "15/06/2026", sezioni: [] }
+            ];
+
+            let listaTornei = JSON.parse(localStorage.getItem('fit_lista_tornei'));
+            if (!listaTornei || listaTornei.length === 0) {
+                listaTornei = DEFAULT_TORNEI;
+                localStorage.setItem('fit_lista_tornei', JSON.stringify(listaTornei));
+            }
+
+            let attivoIdLocale = localStorage.getItem('fit_attivo_id_locale') || "1";
+            let torneoAttivo = listaTornei.find(t => t.id_locale === attivoIdLocale) || listaTornei[0];
+            
+            if(torneoAttivo) {
+                attivoIdLocale = torneoAttivo.id_locale;
+                localStorage.setItem('fit_attivo_id_locale', attivoIdLocale);
+            }
+
+            btnCambiaTorneo.innerText = torneoAttivo ? torneoAttivo.tennisClub : "Seleziona Torneo:";
+
+            const TOURNAMENT_ID = torneoAttivo ? torneoAttivo.id_torneo : "";
+            const COMPETITION_ID = torneoAttivo ? (torneoAttivo.id_competizione || torneoAttivo.id_torneo) : "";
+            const FASE2 = torneoAttivo ? torneoAttivo.fase2 : "";
+            const SEZIONI_QUALIFICAZIONI = (torneoAttivo && torneoAttivo.sezioni) ? torneoAttivo.sezioni : [];
+
+            if (COMPETITION_ID) {
+                btnSitoFitp.href = `https://www.fitp.it/Tornei/Dettaglio-Competizione?competitionId=${COMPETITION_ID}`;
+            } else {
+                btnSitoFitp.style.display = "none";
+            }
+
+            // Popolamento del dropdown dinamico delle sezioni con controllo di sicurezza sui vecchi dati
+            dropdownQualificazioni.innerHTML = "";
+            if (SEZIONI_QUALIFICAZIONI.length === 0) {
+                const opt = document.createElement('option');
+                opt.value = torneoAttivo ? torneoAttivo.fase1 : "";
+                opt.innerText = "Qualificazioni";
+                dropdownQualificazioni.appendChild(opt);
+                if (!torneoAttivo || !torneoAttivo.fase1) dropdownQualificazioni.disabled = true;
+            } else {
+                SEZIONI_QUALIFICAZIONI.forEach(sez => {
+                    const opt = document.createElement('option');
+                    opt.value = sez.id;
+                    
+                    let partiCaption = [];
+                    // AGGIUNTO IL CONTROLLO DI SICUREZZA: previene l'errore se l'oggetto locale è vecchio
+                    if (sez && sez.tournamentDescription) {
+                        partiCaption.push(sez.tournamentDescription);
+                    }
+                    if (sez && sez.nome) {
+                        partiCaption.push(sez.nome);
+                    }
+                    
+                    opt.innerText = partiCaption.join(" - ") || `Fase`;
+                    dropdownQualificazioni.appendChild(opt);
+                });
+            }
+            
+            const urlFinaleTabellone = `https://www.fitp.it/Tornei/Areas/Federtennis/Scripts/Puc/Tabellone_v2?tournamentId=${TOURNAMENT_ID}&phaseId=${FASE2}&intestazione=0&isDouble=0`;
+            const baseUrlDestra = `https://docs.google.com/gview?url=https://sgatapiexternalv2.azurewebsites.net/DigitalPlatform/getorderofplay?competitionUID=${COMPETITION_ID}%26fileName%3Dorariodigioco_`;
+            
+            if (!FASE2) btnFinale.disabled = true;
+
+            let urlInizialeTabellone = "";
+            if (dropdownQualificazioni.value) {
+                urlInizialeTabellone = `https://www.fitp.it/Tornei/Areas/Federtennis/Scripts/Puc/Tabellone_v2?tournamentId=${TOURNAMENT_ID}&phaseId=${dropdownQualificazioni.value}&intestazione=0&isDouble=0`;
+            } else if (FASE2) {
+                urlInizialeTabellone = urlFinaleTabellone;
+                dropdownQualificazioni.classList.remove('attivo');
+                btnFinale.classList.add('attivo');
+            }
+
+            let isSplitMode = false;
+            function checkSplitEligibility() {
+                const ua = navigator.userAgent.toLowerCase();
+                return !/mobile|android|iphone|ipad|phone/i.test(ua) || (window.screen.width >= 1024 || window.screen.height >= 1024);
+            }
+
+            if (checkSplitEligibility()) {
+                isSplitMode = true;
+                document.body.classList.add('split-enabled');
+                rightContainer.insertBefore(toolbarDate, rightContainer.firstChild);
+                leftIframe.src = urlInizialeTabellone;
+            } else {
+                leftIframe.src = urlInizialeTabellone;
+            }
+
+            // --- LOGICA GESTIONE LISTA POPUP ---
+            const listaRenderContainer = document.getElementById('lista-tornei-render');
+
+            btnCambiaTorneo.addEventListener('click', () => {
+                renderListaTornei();
+                modalLista.style.display = 'flex';
+                setTimeout(() => {
+                    const elementoSelezionato = listaRenderContainer.querySelector('.torneo-item.selezionato');
+                    if (elementoSelezionato) {
+                        elementoSelezionato.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+                    }
+                }, 100);
+            });
+
+            function renderListaTornei() {
+                listaRenderContainer.innerHTML = "";
+                listaTornei.forEach(t => {
+                    const item = document.createElement('div');
+                    item.className = 'torneo-item';
+                    if (t.id_locale === attivoIdLocale) item.classList.add('selezionato');
+
+                    const info = document.createElement('div');
+                    info.className = 'torneo-item-info';
+                    info.style.display = 'flex';
+                    info.style.flexDirection = 'column';
+                    info.style.gap = '2px';
+
+                    const linea1 = document.createElement('div');
+                    linea1.style.fontSize = '12px';
+                    linea1.style.color = '#666';
+                    let stringaDate = (t.dataInizio || t.dataFine) ? ` (${t.dataInizio || ''} - ${t.dataFine || ''})` : "";
+                    linea1.innerText = (t.tennisClub || "Circolo non specificato") + stringaDate;
+
+                    const linea2 = document.createElement('div');
+                    linea2.style.fontSize = '14px';
+                    linea2.style.color = '#333';
+                    linea2.style.fontWeight = t.id_locale === attivoIdLocale ? 'bold' : '500';
+                    linea2.innerText = t.id_locale === attivoIdLocale ? `⭐ ${t.nome}` : t.nome;
+
+                    info.appendChild(linea1);
+                    info.appendChild(linea2);
+                    item.appendChild(info);
+
+                    item.addEventListener('click', () => {
+                        localStorage.setItem('fit_attivo_id_locale', t.id_locale);
+                        modalLista.style.display = 'none';
+                        window.location.reload();
+                    });
+                    listaRenderContainer.appendChild(item);
+                });
+            }
+            
+            // --- BOTTONE AGGIORNA BACKEND ---
+            btnAggiornaBackend.addEventListener('click', async () => {
+                btnAggiornaBackend.innerHTML = '<span class="blink-loading">Caricamento...</span>';
+                btnAggiornaBackend.disabled = true;
+                listaRenderContainer.classList.add('disabilita-interazioni');
+                btnListaChiudi.disabled = true;
+
+                try {
+                    const response = await fetch(GOOGLE_SCRIPT_URL);
+                    const data = await response.json();
+                    const listaTorneiEstratta = data.tornei || (Array.isArray(data) ? data : null);
+
+                    if (listaTorneiEstratta && Array.isArray(listaTorneiEstratta)) {
+                        let nuovaLista = [];
+
+                        listaTorneiEstratta.forEach(t => {
+                            let sezioniMappate = [];
+                            let fase1 = ""; 
+                            let fase2 = ""; 
+
+                            if (Array.isArray(t.Sezioni) && t.Sezioni.length > 0) {
+                                const ultimaIndice = t.Sezioni.length - 1;
+                                fase2 = t.Sezioni[ultimaIndice].SectionId || "";
+
+                                for (let i = 0; i < ultimaIndice; i++) {
+                                    sezioniMappate.push({
+                                        id: t.Sezioni[i].SectionId,
+                                        nome: t.Sezioni[i].SectionDescription || `Fase ${i+1}`,
+                                        tournamentDescription: t.Sezioni[i].TournamentDescription || "",
+                                        sectionType: t.Sezioni[i].SectionType || ""
+                                    });
+                                }
+
+                                if (t.Sezioni.length === 1) {
+                                    fase2 = t.Sezioni[0].SectionId || "";
+                                    fase1 = "";
+                                } else if (sezioniMappate.length > 0) {
+                                    fase1 = sezioniMappate[0].id;
+                                }
+                            }
+
+                            nuovaLista.push({
+                                id_locale: String(Date.now() + Math.random()),
+                                tennisClub: (t.TennisClub || "")
+                                    .replace(/ASSOCIAZIONE SPORTIVA DILETTANTISTICA/gi, "")
+                                    .replace(/SOCIETÀ SPORTIVA DILETTANTISTICA/gi, "")
+                                    .replace(/SOCIETA SPORTIVA DILETTANTISTICA/gi, "")
+                                    .replace(/\s+/g, " ")
+                                    .trim(),
+                                nome: t.Description || "", 
+                                descrizioneTorneo: t.descrizioneTorneo,
+                                id_competizione: t.competitionUid || "",
+                                id_torneo: t.uidTorneo || t.id_torneo || t.competitionUid || "",
+                                dataInizio: t.torneoDal || "",
+                                dataFine: t.torneoAl || "",
+                                fase1: fase1,
+                                fase2: fase2,
+                                sezioni: sezioniMappate
+                            });
+                        });
+
+                        if (nuovaLista.length > 0) {
+                            listaTornei = nuovaLista;
+                            localStorage.setItem('fit_lista_tornei', JSON.stringify(listaTornei));
+                            if (!listaTornei.some(x => x.id_locale === attivoIdLocale)) {
+                                localStorage.setItem('fit_attivo_id_locale', listaTornei[0].id_locale);
+                            }
+                            renderListaTornei();
+                            alert("Sincronizzazione completata! Ricarico l'app per allineare l'interfaccia.");
+                            window.location.reload();
+                        } else {
+                            alert("Il backend ha ricevuto un elenco Tornei vuoto.");
+                        }
+                    } else {
+                        alert("Formato dati non riconosciuto.");
+                    }
+                } catch (error) {
+                    alert("Errore durante il caricamento dei dati: " + error.toString());
+                } finally {
+                    btnAggiornaBackend.innerText = "Aggiorna Elenco";
+                    btnAggiornaBackend.disabled = false;
+                    btnListaChiudi.disabled = false;
+                    listaRenderContainer.classList.remove('disabilita-interazioni');
+                }
+            });
+
+            // --- INTERAZIONE DROPDOWN QUALIFICAZIONI ---
+            dropdownQualificazioni.addEventListener('change', function() {
+                if (!this.value) return;
+                disattivaBottoniDate();
+                btnFinale.classList.remove('attivo');
+                this.classList.add('attivo');
+                leftIframe.src = `https://www.fitp.it/Tornei/Areas/Federtennis/Scripts/Puc/Tabellone_v2?tournamentId=${TOURNAMENT_ID}&phaseId=${this.value}&intestazione=0&isDouble=0`;
+            });
+
+            btnFinale.addEventListener('click', function() {
+                if (!FASE2) return;
+                disattivaBottoniDate();
+                dropdownQualificazioni.classList.remove('attivo');
+                this.classList.add('attivo');
+                leftIframe.src = urlFinaleTabellone;
+            });
+
+            // --- GESTIONE BOTTONI DATE ---
+            function inizializzaBottoniDate() {
+                let torneoTerminato = false;
+                if (torneoAttivo && torneoAttivo.dataFine) {
+                    const partiData = torneoAttivo.dataFine.split('/');
+                    if (partiData.length === 3) {
+                        const dataFineTorneo = new Date(partiData[2], partiData[1] - 1, partiData[0]);
+                        const oggi = new Date();
+                        oggi.setHours(0, 0, 0, 0);
+                        dataFineTorneo.setHours(0, 0, 0, 0);
+                        if (dataFineTorneo < oggi) torneoTerminato = true;
+                    }
+                }
+
+                const opzioni = [{ etichetta: "Ieri", offset: -1 }, { etichetta: "Oggi", offset: 0 }, { etichetta: "Domani", offset: 1 }, { etichetta: "Dopodomani", offset: 2 }];
+                opzioni.forEach(opzione => {
+                    const dataCorrente = new Date();
+                    dataCorrente.setDate(dataCorrente.getDate() + opzione.offset);
+                    const anno = dataCorrente.getFullYear();
+                    const mese = String(dataCorrente.getMonth() + 1).padStart(2, '0');
+                    const giorno = String(dataCorrente.getDate()).padStart(2, '0');
+                    const dataUrl = `${anno}${mese}${giorno}`;
+                    const dataBottone = `${giorno}/${mese}`;
+
+                    const bottone = document.createElement('button');
+                    bottone.className = 'btn-azione btn-data-classe';
+                    bottone.innerText = `${opzione.etichetta} (${dataBottone})`;
+                    
+                    if (torneoTerminato) {
+                        bottone.disabled = true;
+                    } else if (opzione.offset === 0 && isSplitMode) {
+                        bottone.classList.add('attivo');
+                        rightIframe.src = `${baseUrlDestra}${dataUrl}.pdf&embedded=true`;
+                    }
+
+                    bottone.addEventListener('click', function() {
+                        if (bottone.disabled) return;
+                        if (!isSplitMode) {
+                            dropdownQualificazioni.classList.remove('attivo');
+                            btnFinale.classList.remove('attivo');
+                        }
+                        document.querySelectorAll('#toolbar-date .btn-azione').forEach(b => b.classList.remove('attivo'));
+                        bottone.classList.add('attivo');
+
+                        if (isSplitMode) {
+                            rightIframe.src = `${baseUrlDestra}${dataUrl}.pdf&embedded=true`;
+                        } else {
+                            leftIframe.src = `${baseUrlDestra}${dataUrl}.pdf&embedded=true`;
+                        }
+                    });
+                    toolbarDate.appendChild(bottone);
+                });
+            }
+
+            function disattivaBottoniDate() {
+                document.querySelectorAll('#toolbar-date .btn-azione').forEach(b => b.classList.remove('attivo'));
+            }
+
+            if (isSplitMode) {
+                let isDragging = false;
+                divider.addEventListener('mousedown', () => {
+                    isDragging = true;
+                    divider.classList.add('active');
+                    leftContainer.classList.add('no-pointer');
+                    rightContainer.classList.add('no-pointer');
+                });
+                window.addEventListener('mousemove', (e) => {
+                    if (!isDragging) return;
+                    let percentage = (e.clientX / window.innerWidth) * 100;
+                    if (percentage < 15) percentage = 15;
+                    if (percentage > 85) percentage = 85;
+                    leftContainer.style.width = `calc(${percentage}% - 3px)`;
+                    rightContainer.style.width = `calc(${100 - percentage}% - 3px)`;
+                });
+                window.addEventListener('mouseup', () => {
+                    if (isDragging) {
+                        isDragging = false;
+                        divider.classList.remove('active');
+                        leftContainer.classList.remove('no-pointer');
+                        rightContainer.classList.remove('no-pointer');
+                    }
+                });
+            }
+
+            inizializzaBottoniDate();
+        } catch(e) {
+            alert("Errore catturato nel blocco principale:\n" + e.message);
+        }
+    </script>
+</body>
+</html>
