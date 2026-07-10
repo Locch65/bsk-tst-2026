@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Polismile Basket App</title>
+    <title>My Basket App</title>
 
     <meta name="theme-color" content="#2c3e50">
     <link rel="icon" type="image/png" href="icon-192.png">
@@ -19,28 +19,69 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
     </style>
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/main-DvgmvkDf.js"></script>
-  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/modulepreload-polyfill-Dq-7hhpP.js">
-  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/U14_FN-DZp1kQHv.js">
-  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/common-Do8bSbFQ.js">
-  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/myTeamConfig-ButUNXU8.js">
-  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/main-B7SCW3Lp.js">
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/main-DEKNzunC.js"></script>
+  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/modulepreload-polyfill-B3UlQ8kj.js">
+  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/U14_FN-fqU5Ep0J.js">
+  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/common-DS_jCM6Z.js">
+  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/myTeamConfig-BLUPUh14.js">
+  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/main-BughdTT_.js">
   <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/main-DbZ7AZpq.css">
   <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/main-tCOyTUGo.css">
 </head>
 
 <body>
 
-    <header>
-        <div style="display: flex; flex-direction: column;">
-            <h1 id="myTeamFullName"> </h1>
-            <div id="appVersion" class="app-version">Versione </div>
+    <header id="main-header" style="display: flex; flex-direction: column; gap: 0.8rem; padding: 1rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; width: 100%;">
+            <div style="display: flex; align-items: center; gap: 0.8rem; margin: 0;">
+                <span style="font-size: 1.6rem; font-weight: bold; color: var(--primary);">My Basket App</span>
+                <div id="appVersion" class="app-version" style="margin: 0;">Versione </div>
+            </div>
+            
+            <button id="btn-logout" onclick="window.signOut()" style="display: none; background-color: #c0392b; color: white; border: none; padding: 0.5rem 1rem; border-radius: 5px; font-size: 1.2rem; cursor: pointer; font-weight: bold; margin: 0;">
+                <i class="fas fa-sign-out-alt"></i> Esci
+            </button>
         </div>
-        <div style="display: flex; align-items: center; gap: 1rem;">
-            <i class="fas fa-cog" id="btn-settings" style="font-size: 2.5rem; cursor: pointer; color: var(--primary);" onclick="window.apriPopupSettings()"></i>
-            <img src="icon-192.png" alt="Logo Squadra" class="header-logo" id="logo-admin">
+
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <img src="icon-192.png" alt="Logo Squadra" class="header-logo" id="logo-admin" style="margin: 0;">
+                <!-- 🌟 Aggiunto cursore pointer e onclick sui testi per aprire il selettore -->
+                <div style="display: flex; flex-direction: column; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent;" onclick="window.apriPopupCambioTeam()">
+                    <div id="year" class="year"> </div>
+                    <h1 id="myTeamFullName" style="margin: 0;"> </h1>
+                </div>
+            </div>
+            
+            <div style="display: flex; align-items: center;">
+                <i class="fas fa-cog" id="btn-settings" style="font-size: 2.5rem; cursor: pointer; color: var(--primary); margin: 0;" onclick="window.apriPopupSettings()"></i>
+            </div>
         </div>
     </header>
+
+    <!-- 🌟 NUOVO POPUP: Selezione Cambio Squadra -->
+    <div id="teamSelectorPopup" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--overlay); z-index: 1600; justify-content: center; align-items: center;">
+        <div class="popup-content" style="max-width: 85%; width: 400px; text-align: center;">
+            <h3 style="color: var(--primary); font-size: 2rem; margin-bottom: 1.5rem;">Seleziona Squadra</h3>
+            
+            <!-- Lista dinamica inserita via JS -->
+            <div id="team-selector-list" style="display: flex; flex-direction: column; gap: 1rem; max-height: 40vh; overflow-y: auto; margin-bottom: 1.5rem; padding: 0.5rem;">
+                <!-- Gli item compariranno qui -->
+            </div>
+
+            <button class="popup-btn" onclick="window.chiudiPopupCambioTeam()" style="background-color: #444; width: 100%; margin-top: 0;">Chiudi</button>
+        </div>
+    </div>
+
+    <div id="login-container" style="display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 50vh; gap: 1.5rem; padding: 2rem;">
+        <img src="icon-512.png" alt="Logo App" style="width: 18rem; height: 18rem; object-fit: contain; animation: bounce 2s infinite;">
+        
+        <h2 id="loginAppVersion" class="app-version" >Versione </h2>
+        
+        <button id="btn-signin-central" onclick="window.signIn()" style="background-color: var(--primary); color: white; border: none; padding: 1.5rem 3rem; border-radius: 10px; font-size: 1.8rem; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); width: 80%; max-width: 300px; transition: all 0.3s ease;">
+            <i class="fas fa-sign-in-alt"></i> Accedi
+        </button>
+    </div>
 
     <div class="menu-grid">
         <div class="column-flex">
