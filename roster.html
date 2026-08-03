@@ -12,11 +12,11 @@
   <link rel="manifest" href="manifest.json">
 
   
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/roster-Bg3J4hQQ.js"></script>
-  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/modulepreload-polyfill-Bg2a9N9O.js">
-  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/common-BsMFp0aG.js">
-  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/myTeamConfig-2RMfiidk.js">
-  <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/roster-ITrBJ-81.css">
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/roster-D97VlCUn.js"></script>
+  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/modulepreload-polyfill-sjAyxdwP.js">
+  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/common-BNGIVJ-j.js">
+  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/myTeamConfig-ktoi45DU.js">
+  <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/roster-Dq3IqV-g.css">
 </head>
 
 <body>
@@ -36,16 +36,25 @@
   <div class="filters-container">
     <div class="filter-group">
       <strong>Campionato:</strong>
-      <label><input type="radio" name="catFilter" value="1" > 1</label>
+      <!-- <label><input type="radio" name="catFilter" value="1" > 1</label>
       <label><input type="radio" name="catFilter" value="2" > 2</label>
-      <label><input type="radio" name="catFilter" value="Tutti" checked onclick="applicaFiltriECalcoli()"> Tutti</label>
+      <label><input type="radio" name="catFilter" value="Tutti" checked onclick="applicaFiltriECalcoli()"> Tutti</label> -->
+      <span id="campionatoContainer"></span>
     </div>
 
-    <div class="filter-group">
+    <!-- <div class="filter-group">
       <strong>Punti:</strong>
       <label><input type="radio" name="calcType" value="Totale" checked onclick="applicaFiltriECalcoli()"> Somma</label>
       <label><input type="radio" name="calcType" value="Media" onclick="applicaFiltriECalcoli()"> Media</label>
+    </div> -->
+    <div class="filter-group">
+      <strong>Punti:</strong>
+      <button id="btnCalcType" type="button" class="cycle-filter-btn">
+        <span id="btnCalcTypeText">Totale</span>
+        <span class="btn-arrow">▼</span>
+      </button>
     </div>
+
   </div>
 
   <div id="loading" class="loading">Calcolo statistiche in corso...</div>
