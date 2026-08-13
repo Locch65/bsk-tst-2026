@@ -14,17 +14,17 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/modulepreload-polyfill-DUN4kq3x.js"></script>
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/U14_FN-Dv5MnIV9.js"></script>
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/common-3guu1Wmd.js"></script>
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/myTeamConfig-BfrprFut.js"></script>
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/main-B4rTXFSC.js"></script>
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/modulepreload-polyfill-D1wq53ch.js"></script>
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/U14_FN-B1nay_we.js"></script>
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/common-lPbdBLuu.js"></script>
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/myTeamConfig-DZgz16S_.js"></script>
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/main-B710g6FJ.js"></script>
   <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/main-DbZ7AZpq.css">
-  <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/maps-DW90XUWR.css">
+  <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/maps-BzaN-sY7.css">
 </head>
 <body>
 
-    <div class="header-container">
+    <!-- <div class="header-container">
         <div style="display: flex; align-items: center; gap: 15px; width: 100%;">
             <a href="index.html" class="home-btn" aria-label="Home">
                 <i class="fas fa-home"></i>
@@ -40,6 +40,30 @@
             <label><input type="radio" name="filtroPartite" value="prossima" onclick="applicaFiltro()"> Prossima</label>
             <label><input type="radio" name="filtroPartite" value="future" onclick="applicaFiltro()"> Future</label>
             <label><input type="radio" name="filtroPartite" value="tutte" checked onclick="applicaFiltro()"> Tutte</label>
+        </div>
+    </div> -->
+    <div class="header-container">
+        <div class="header-content">
+            <!-- 1. Bottone Home -->
+            <a href="index.html" class="home-btn" aria-label="Home">
+                <i class="fas fa-home"></i>
+            </a>
+
+            <!-- 2. Label "Mappa Trasferte" -->
+            <h2>Mappa Trasferte</h2>
+
+            <!-- 3. Radio button per i filtri -->
+            <div class="filter-container">
+                <label><input type="radio" name="filtroPartite" value="passate" onclick="applicaFiltro()"> Passate</label>
+                <label><input type="radio" name="filtroPartite" value="prossima" onclick="applicaFiltro()"> Prossima</label>
+                <label><input type="radio" name="filtroPartite" value="future" onclick="applicaFiltro()"> Future</label>
+                <label><input type="radio" name="filtroPartite" value="tutte" checked onclick="applicaFiltro()"> Tutte</label>
+            </div>
+
+            <!-- 4. Bottone Refresh (spinto a destra) -->
+            <button onclick="window.forzaAggiornamento()" class="refresh-btn" title="Aggiorna dati dal server">
+                <i id="refresh-icon" class="fas fa-sync-alt"></i>
+            </button>
         </div>
     </div>
 

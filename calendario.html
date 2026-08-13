@@ -13,17 +13,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/modulepreload-polyfill-DUN4kq3x.js"></script>
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/U14_FN-Dv5MnIV9.js"></script>
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/common-3guu1Wmd.js"></script>
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/myTeamConfig-BfrprFut.js"></script>
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/main-B4rTXFSC.js"></script>
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/modulepreload-polyfill-D1wq53ch.js"></script>
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/U14_FN-B1nay_we.js"></script>
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/common-lPbdBLuu.js"></script>
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/myTeamConfig-DZgz16S_.js"></script>
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/main-B710g6FJ.js"></script>
   <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/main-DbZ7AZpq.css">
-  <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/calendario-kUVBE4nh.css">
+  <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/calendario-Dz3Wtld5.css">
 </head>
 
 <body>
   <header class="header-fissa">
+    <!-- 
     <div id="hamburgerMenu">
       <button id="hamburgerBtn">☰</button>
       <nav id="menu" class="hidden">
@@ -38,19 +39,7 @@
             <span class="menu-section-title">
               <i class="fas fa-trophy"></i> Campionato
             </span>
-            <!-- Contenitore generato dinamicamente da JS -->
             <div id="containerCampionatiRadio" class="filter-group-vertical"></div>
-            <!-- <div class="filter-group-vertical">
-              <label class="radio-container">
-                <input type="radio" name="camp" value="U14" class="camp-radio"> U14
-              </label>
-              <label class="radio-container">
-                <input type="radio" name="camp" value="U15" class="camp-radio"> U15
-              </label>
-              <label class="radio-container">
-                <input type="radio" name="camp" value="Tutti" class="camp-radio"> Tutti
-              </label>
-            </div> -->
           </li>
 
           <li>
@@ -89,6 +78,11 @@
         </ul>
       </nav>
     </div>
+    -->
+
+    <a href="index.html" class="home-btn" aria-label="Home">
+      <i class="fas fa-home"></i>
+    </a>
 
     <div class="header-toolbar">
         <button id="btnCicloCamp" class="btn-tool">
@@ -106,7 +100,11 @@
         <button id="btnSearchToggle" class="btn-tool">
           <i class="fas fa-search"></i>
         </button>
-        <span id="matchCounter" class="match-counter">0/0</span>
+        <!-- <span id="matchCounter" class="match-counter">0/0</span> -->
+        <span id="matchCounter" class="match-counter btn-admin-counter" role="button" style="cursor: pointer;">
+          <i class="fas fa-sync-alt"></i> 12/24
+        </span>
+
     </div>
   </header>
   <div id="searchContainer" class="search-bar-container hidden">
