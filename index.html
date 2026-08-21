@@ -10,20 +10,21 @@
     <link rel="icon" type="image/png" href="icon-192.png">
     <link rel="manifest" href="manifest.json">
 
+    <!-- Firebase SDK (App, Database e Auth) -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>   
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/main-D03mwvnE.js"></script>
-  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/modulepreload-polyfill-CcFYnYB4.js">
-  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/U14_FN-DshKXyBr.js">
-  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/common-CheEc2Ks.js">
-  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/myTeamConfig-XCGNLqiD.js">
-  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/main-msujjtWH.js">
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/main-1k3wMq_q.js"></script>
+  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/modulepreload-polyfill-C1lS8vM_.js">
+  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/U14_FN-CCZApkAZ.js">
+  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/myTeamConfig-CkSMhHtL.js">
+  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/main-8sfZccbx.js">
   <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/main-DbZ7AZpq.css">
-  <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/main-ClVXxgt2.css">
+  <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/main-Wt5NVM6i.css">
 </head>
 
 <body>
@@ -69,14 +70,42 @@
         </div>
     </div>
 
+    <!-- Schermata di Autenticazione / Registrazione -->
     <div id="login-container" style="display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 50vh; gap: 1.5rem; padding: 2rem;">
         <img src="icon-512.png" alt="Logo App" style="width: 18rem; height: 18rem; object-fit: contain; animation: bounce 2s infinite;">
         
-        <h2 id="loginAppVersion" class="app-version" >Versione </h2>
+        <h2 id="loginAppVersion" class="app-version">Versione </h2>
         
-        <button id="btn-signin-central" onclick="window.signIn()" style="background-color: var(--primary); color: white; border: none; padding: 1.5rem 3rem; border-radius: 10px; font-size: 1.8rem; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); width: 80%; max-width: 300px; transition: all 0.3s ease;">
-            <i class="fas fa-sign-in-alt"></i> Accedi
+        <!-- Bottone Login Google -->
+        <button id="btn-signin-central" onclick="window.loginConGoogle()" style="background-color: var(--primary); color: white; border: none; padding: 1.5rem 3rem; border-radius: 10px; font-size: 1.8rem; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); width: 80%; max-width: 300px; transition: all 0.3s ease; display: inline-flex; align-items: center; justify-content: center; gap: 12px;">
+            <i class="fab fa-google"></i>
+            <span id="btn-signin-text">Accedi con Google</span>
         </button>
+
+        <!-- Box Registrazione per Utenti Non Registrati -->
+        <div id="registration-container" style="display: none; width: 100%; max-width: 350px; padding: 1.5rem; border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; background-color: var(--card-color, #222); box-shadow: 0 4px 15px rgba(0,0,0,0.4); text-align: left;">
+            <h3 style="color: var(--primary); font-size: 1.8rem; margin-top: 0; margin-bottom: 0.8rem; text-align: center;">Richiesta Registrazione</h3>
+            <p style="font-size: 1.1rem; color: #ccc; margin-bottom: 1.2rem; text-align: center;">Account Google non censito. Invia i tuoi dati per richiedere l'abilitazione all'amministratore.</p>
+            
+            <div style="margin-bottom: 1rem;">
+                <label style="display: block; font-size: 1.1rem; margin-bottom: 0.3rem; color: #aaa;">Email autenticata:</label>
+                <input type="email" id="reg-email" readonly style="width: 100%; padding: 0.8rem; box-sizing: border-box; background-color: rgba(255,255,255,0.1); border: 1px solid #555; color: #fff; border-radius: 6px; font-size: 1.2rem;" />
+            </div>
+
+            <div style="margin-bottom: 1rem;">
+                <label for="reg-nome" style="display: block; font-size: 1.1rem; margin-bottom: 0.3rem; color: #aaa;">Nome e Cognome *</label>
+                <input type="text" id="reg-nome" required style="width: 100%; padding: 0.8rem; box-sizing: border-box; border: 1px solid #555; background-color: #333; color: #fff; border-radius: 6px; font-size: 1.2rem;" />
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <label for="reg-ruolo" style="display: block; font-size: 1.1rem; margin-bottom: 0.3rem; color: #aaa;">Ruolo / Note (Opzionale)</label>
+                <input type="text" id="reg-ruolo" placeholder="Es. Atleta, Genitore, Dirigente" style="width: 100%; padding: 0.8rem; box-sizing: border-box; border: 1px solid #555; background-color: #333; color: #fff; border-radius: 6px; font-size: 1.2rem;" />
+            </div>
+
+            <button id="btn-invia-registrazione" onclick="window.inviaRichiestaRegistrazione()" style="width: 100%; padding: 1rem; font-size: 1.4rem; font-weight: bold; cursor: pointer; border-radius: 8px; border: none; background-color: #27ae60; color: white; transition: background-color 0.2s;">
+                Invia Richiesta
+            </button>
+        </div>
     </div>
 
     <div class="menu-grid">
