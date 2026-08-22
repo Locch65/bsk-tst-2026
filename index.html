@@ -18,13 +18,13 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/main-1k3wMq_q.js"></script>
-  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/modulepreload-polyfill-C1lS8vM_.js">
-  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/U14_FN-CCZApkAZ.js">
-  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/myTeamConfig-CkSMhHtL.js">
-  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/main-8sfZccbx.js">
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/main-52vmpUSc.js"></script>
+  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/modulepreload-polyfill-ChFkW3uF.js">
+  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/U14_FN-CIlwMp6M.js">
+  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/myTeamConfig-C2u-hBbw.js">
+  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/main-KbpomFWA.js">
   <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/main-DbZ7AZpq.css">
-  <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/main-Wt5NVM6i.css">
+  <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/main-DOqCnu3S.css">
 </head>
 
 <body>
@@ -59,7 +59,7 @@
 
     <!-- POPUP: Selezione Cambio Squadra -->
     <div id="teamSelectorPopup" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--overlay); z-index: 1600; justify-content: center; align-items: center;">
-        <div class="popup-content" style="max-width: 85%; width: 400px; text-align: center;">
+        <div class="popup-content" style="max-width: 95%; width: 400px; text-align: center;">
             <h3 style="color: var(--primary); font-size: 2rem; margin-bottom: 1.5rem;">Seleziona Squadra</h3>
             
             <div id="team-selector-list" style="display: flex; flex-direction: column; gap: 1rem; max-height: 40vh; overflow-y: auto; margin-bottom: 1.5rem; padding: 0.5rem;">
@@ -71,41 +71,73 @@
     </div>
 
     <!-- Schermata di Autenticazione / Registrazione -->
-    <div id="login-container" style="display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 50vh; gap: 1.5rem; padding: 2rem;">
-        <img src="icon-512.png" alt="Logo App" style="width: 18rem; height: 18rem; object-fit: contain; animation: bounce 2s infinite;">
+    <div id="login-container" style="display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; gap: 0.8rem; padding: 1rem; box-sizing: border-box;">
+        <!-- Logo palla da basket ridimensionato per far rientrare tutto nella pagina -->
+        <img src="icon-512.png" alt="Logo App" style="width: 12rem; height: 12rem; object-fit: contain; animation: bounce 2s infinite;">
         
-        <h2 id="loginAppVersion" class="app-version">Versione </h2>
+        <h2 id="loginAppVersion" class="app-version" style="margin: 0;">Versione </h2>
         
         <!-- Bottone Login Google -->
-        <button id="btn-signin-central" onclick="window.loginConGoogle()" style="background-color: var(--primary); color: white; border: none; padding: 1.5rem 3rem; border-radius: 10px; font-size: 1.8rem; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); width: 80%; max-width: 300px; transition: all 0.3s ease; display: inline-flex; align-items: center; justify-content: center; gap: 12px;">
+        <button id="btn-signin-central" onclick="window.loginConGoogle()" style="background-color: var(--card-color); color: var(--text-color); border: none; padding: 1rem 2rem; border-radius: 10px; font-size: 1.5rem; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); width: 85%; max-width: 320px; transition: all 0.3s ease; display: inline-flex; align-items: center; justify-content: center; gap: 10px;">
             <i class="fab fa-google"></i>
             <span id="btn-signin-text">Accedi con Google</span>
         </button>
 
         <!-- Box Registrazione per Utenti Non Registrati -->
-        <div id="registration-container" style="display: none; width: 100%; max-width: 350px; padding: 1.5rem; border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; background-color: var(--card-color, #222); box-shadow: 0 4px 15px rgba(0,0,0,0.4); text-align: left;">
-            <h3 style="color: var(--primary); font-size: 1.8rem; margin-top: 0; margin-bottom: 0.8rem; text-align: center;">Richiesta Registrazione</h3>
-            <p style="font-size: 1.1rem; color: #ccc; margin-bottom: 1.2rem; text-align: center;">Account Google non censito. Invia i tuoi dati per richiedere l'abilitazione all'amministratore.</p>
+        <div id="registration-container" style="display: none; width: 100%; max-width: 350px; padding: 1rem; border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; background-color: var(--card-color, #222); box-shadow: 0 4px 15px rgba(0,0,0,0.4); text-align: left; box-sizing: border-box;">
+            <h3 style="color: var(--primary); font-size: 1.5rem; margin-top: 0; margin-bottom: 0.4rem; text-align: center;">Richiesta Registrazione</h3>
+            <p style="font-size: 1rem; color: #ccc; margin-top: 0; margin-bottom: 0.8rem; text-align: center; line-height: 1.2;">Account Google non censito. Invia i tuoi dati per richiedere l'abilitazione all'amministratore.</p>
             
-            <div style="margin-bottom: 1rem;">
-                <label style="display: block; font-size: 1.1rem; margin-bottom: 0.3rem; color: #aaa;">Email autenticata:</label>
-                <input type="email" id="reg-email" readonly style="width: 100%; padding: 0.8rem; box-sizing: border-box; background-color: rgba(255,255,255,0.1); border: 1px solid #555; color: #fff; border-radius: 6px; font-size: 1.2rem;" />
+            <div style="margin-bottom: 0.6rem;">
+                <label style="display: block; font-size: 1rem; margin-bottom: 0.2rem; color: #aaa;">Email autenticata:</label>
+                <input type="email" id="reg-email" readonly style="width: 100%; padding: 0.5rem; box-sizing: border-box; background-color: rgba(255,255,255,0.1); border: 1px solid #555; color: #fff; border-radius: 6px; font-size: 1.1rem;" />
             </div>
 
-            <div style="margin-bottom: 1rem;">
-                <label for="reg-nome" style="display: block; font-size: 1.1rem; margin-bottom: 0.3rem; color: #aaa;">Nome e Cognome *</label>
-                <input type="text" id="reg-nome" required style="width: 100%; padding: 0.8rem; box-sizing: border-box; border: 1px solid #555; background-color: #333; color: #fff; border-radius: 6px; font-size: 1.2rem;" />
+            <div style="margin-bottom: 0.6rem;">
+                <label for="reg-nome" style="display: block; font-size: 1rem; margin-bottom: 0.2rem; color: #aaa;">Nome e Cognome *</label>
+                <input type="text" id="reg-nome" required style="width: 100%; padding: 0.5rem; box-sizing: border-box; border: 1px solid #555; background-color: #333; color: #fff; border-radius: 6px; font-size: 1.1rem;" />
             </div>
 
-            <div style="margin-bottom: 1.5rem;">
-                <label for="reg-ruolo" style="display: block; font-size: 1.1rem; margin-bottom: 0.3rem; color: #aaa;">Ruolo / Note (Opzionale)</label>
-                <input type="text" id="reg-ruolo" placeholder="Es. Atleta, Genitore, Dirigente" style="width: 100%; padding: 0.8rem; box-sizing: border-box; border: 1px solid #555; background-color: #333; color: #fff; border-radius: 6px; font-size: 1.2rem;" />
+            <!-- Selezione Ruolo tramite Radio Button -->
+            <div style="margin-bottom: 0.6rem;">
+                <label style="display: block; font-size: 1rem; margin-bottom: 0.3rem; color: #aaa;">Ruolo *</label>
+                <div style="display: flex; justify-content: space-between; align-items: center; background-color: #333; padding: 0.5rem; border-radius: 6px; border: 1px solid #555;">
+                    <label style="display: flex; align-items: center; gap: 0.3rem; font-size: 1.1rem; color: #fff; cursor: pointer;">
+                        <input type="radio" name="reg-ruolo" value="Atleta" checked onchange="window.toggleNomeAtletaField()" style="accent-color: var(--primary);"> Atleta
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.3rem; font-size: 1.1rem; color: #fff; cursor: pointer;">
+                        <input type="radio" name="reg-ruolo" value="Genitore" onchange="window.toggleNomeAtletaField()" style="accent-color: var(--primary);"> Genitore
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.3rem; font-size: 1.1rem; color: #fff; cursor: pointer;">
+                        <input type="radio" name="reg-ruolo" value="Supporter" onchange="window.toggleNomeAtletaField()" style="accent-color: var(--primary);"> Supporter
+                    </label>
+                </div>
             </div>
 
-            <button id="btn-invia-registrazione" onclick="window.inviaRichiestaRegistrazione()" style="width: 100%; padding: 1rem; font-size: 1.4rem; font-weight: bold; cursor: pointer; border-radius: 8px; border: none; background-color: #27ae60; color: white; transition: background-color 0.2s;">
+            <!-- CAMPO CONDIZIONALE: Nome Atleta (Visibile solo per Genitore o Supporter) -->
+            <div id="box-nome-atleta" style="display: none; margin-bottom: 0.6rem;">
+                <label for="reg-nome-atleta" style="display: block; font-size: 1rem; margin-bottom: 0.2rem; color: #aaa;">Nome Atleta *</label>
+                <input type="text" id="reg-nome-atleta" placeholder="Nome e cognome dell'atleta" style="width: 100%; padding: 0.5rem; box-sizing: border-box; border: 1px solid #555; background-color: #333; color: #fff; border-radius: 6px; font-size: 1.1rem;" />
+            </div>
+
+            <!-- Campo Squadra e Campionato -->
+            <div style="margin-bottom: 0.6rem;">
+                <label for="reg-squadra" style="display: block; font-size: 1rem; margin-bottom: 0.2rem; color: #aaa;">Squadra e Campionato</label>
+                <input type="text" id="reg-squadra" placeholder="Polismile U15" style="width: 100%; padding: 0.5rem; box-sizing: border-box; border: 1px solid #555; background-color: #333; color: #fff; border-radius: 6px; font-size: 1.1rem;" />
+            </div>
+
+            <!-- Campo Testo Multilinea Messaggio -->
+            <div style="margin-bottom: 0.8rem;">
+                <label for="reg-messaggio" style="display: block; font-size: 1rem; margin-bottom: 0.2rem; color: #aaa;">Messaggio (opzionale):</label>
+                <textarea id="reg-messaggio" rows="2" placeholder="Note o informazioni aggiuntive..." style="width: 100%; padding: 0.5rem; box-sizing: border-box; border: 1px solid #555; background-color: #333; color: #fff; border-radius: 6px; font-size: 1.1rem; resize: vertical; font-family: inherit;"></textarea>
+            </div>
+
+            <button id="btn-invia-registrazione" onclick="window.inviaRichiestaRegistrazione()" style="width: 100%; padding: 0.8rem; font-size: 1.3rem; font-weight: bold; cursor: pointer; border-radius: 8px; border: none; background-color: #27ae60; color: white; transition: background-color 0.2s;">
                 Invia Richiesta
             </button>
         </div>
+
+
     </div>
 
     <div class="menu-grid">
