@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timer OCR Tabellone</title>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: #121212;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 100vh;
+      padding: 16px;
+    }
+
+    h1 {
+      font-size: 1.2rem;
+      margin-bottom: 12px;
+      color: #bb86fc;
+    }
+
+    /* Container della finestra video */
+    .viewfinder {
+      width: 100%;
+      max-width: 480px;
+      height: 60vh;
+      border: 2px solid #333;
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+      background-color: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Canvas nascosto usato per il processing ed OCR */
+    #processCanvas {
+      display: none;
+    }
+
+    /* Box inferiore per la visualizzazione del risultato */
+    .result-card {
+      width: 100%;
+      max-width: 480px;
+      background-color: #1e1e1e;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      margin-top: 16px;
+    }
+
+    .result-card label {
+      display: block;
+      font-size: 0.9rem;
+      color: #aaa;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .timer-display {
+      font-family: monospace;
+      font-size: 3rem;
+      font-weight: bold;
+      color: #03dac6;
+      letter-spacing: 2px;
+    }
+
+    .status {
+      font-size: 0.8rem;
+      color: #ffb74d;
+      margin-top: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Lettore Timer Tabellone</h1>
+
+  <div class="viewfinder">
+    <video id="webcam" autoplay playsinline muted></video>
+  </div>
+
+  <canvas id="processCanvas"></canvas>
+
+  <div class="result-card">
+    <label>Tempo Rilevato</label>
+    <div id="timerValue" class="timer-display">--:--</div>
+    <div id="statusText" class="status">Inizializzazione fotocamera...</div>
+  </div>
+
+  <script>
+    const video = document.getElementById('webcam');
+    const canvas = document.getElementById('processCanvas');
+    const timerValueEl = document.getElementById('timerValue');
+    const statusTextEl = document.getElementById('statusText');
+
+    let ocrWorker = null;
+    let isProcessing = false;
+
+    // 1. Inizializzazione Fotocamera
+    async function initCamera() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { 
+            facingMode: { ideal: "environment" }, // Preferisce fotocamera posteriore
+            width: { ideal: 1280 },
+            height: { ideal: 720 }
+          },
+          audio: false
+        });
+        video.srcObject = stream;
+        await video.play();
+        statusTextEl.innerText = "Caricamento OCR in corso...";
+        await initOCR();
+      } catch (err) {
+        console.error("Errore di accesso alla fotocamera:", err);
+        statusTextEl.innerText = "Errore: impossibile accedere alla fotocamera.";
+      }
+    }
+
+    // 2. Inizializzazione Tesseract OCR
+    async function initOCR() {
+      try {
+        ocrWorker = await Tesseract.createWorker('eng');
+        // Restringiamo il riconoscimento ai soli numeri e ai due punti
+        await ocrWorker.setParameters({
+          tessedit_char_whitelist: '0123456789:',
+        });
+        statusTextEl.innerText = "Scansione in corso...";
+        // Avvia il loop di scansione ogni 600 ms
+        setInterval(processFrame, 600);
+      } catch (err) {
+        console.error("Errore inizializzazione OCR:", err);
+        statusTextEl.innerText = "Errore nell'inizializzazione del motore OCR.";
+      }
+    }
+
+    // 3. Pre-elaborazione dell'immagine e OCR sul frame intero
+    async function processFrame() {
+      if (isProcessing || video.readyState !== video.HAVE_ENOUGH_DATA) return;
+      
+      isProcessing = true;
+      const ctx = canvas.getContext('2d');
+      
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+
+      // Disegna l'intero frame catturato sul canvas
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      // Pre-processing: Binarizzazione per far risaltare i LED
+      const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const data = imgData.data;
+      for (let i = 0; i = i + 4) {
+        const avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
+        // Pixel luminosi (LED) -> Bianco, resto -> Nero
+        const threshold = avg > 140 ? 255 : 0;
+        data[i] = data[i + 1] = data[i + 2] = threshold;
+      }
+      ctx.putImageData(imgData, 0, 0);
+
+      try {
+        // Esegue l'OCR sul canvas elaborato
+        const { data: { text } } = await ocrWorker.recognize(canvas);
+        
+        // Cerca una sequenza di tipo mm:ss (es. da 10:00 a 00:00)
+        const match = text.match(/\b([0-9]{2}:[0-9]{2})\b/);
+        
+        if (match) {
+          timerValueEl.innerText = match[1];
+          statusTextEl.innerText = "Valore aggiornato";
+          statusTextEl.style.color = "#03dac6";
+        } else {
+          statusTextEl.innerText = "Ricerca tempo in corso...";
+          statusTextEl.style.color = "#ffb74d";
+        }
+      } catch (err) {
+        console.error("Errore durante l'OCR:", err);
+      } finally {
+        isProcessing = false;
+      }
+    }
+
+    // Avvio all'apertura della pagina
+    window.addEventListener('load', initCamera);
+  </script>
+</body>
+</html>
