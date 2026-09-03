@@ -18,27 +18,32 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/main-52vmpUSc.js"></script>
-  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/modulepreload-polyfill-ChFkW3uF.js">
-  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/U14_FN-CIlwMp6M.js">
-  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/myTeamConfig-C2u-hBbw.js">
-  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/main-KbpomFWA.js">
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/main-CM1BmGUf.js"></script>
+  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/modulepreload-polyfill-BLGLLHxi.js">
+  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/U14_FN-taastdyM.js">
+  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/myTeamConfig-D6Q7bpfI.js">
+  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/main-00jlehjt.js">
   <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/main-DbZ7AZpq.css">
-  <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/main-DOqCnu3S.css">
+  <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/main-oM5iVpgl.css">
 </head>
 
 <body>
 
-    <header id="main-header" style="display: flex; flex-direction: column; gap: 0.8rem; padding: 0.5rem;">
+    <header id="main-header" style="display: flex; flex-direction: column; gap: 0.3rem; padding: 0.5rem;">
         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; width: 100%;">
             <div style="display: flex; align-items: center; gap: 0.6rem; margin: 0;">
                 <span style="font-size: 1.6rem; font-weight: bold; color: var(--primary);">My Basket App</span>
-                <div id="appVersion" class="app-version" style="margin: 0;">Versione </div>
+                <div id="appVersion" class="app-version" style="margin: 0;color: var(--text-color);">Versione </div>
             </div>
             
             <button id="btn-logout" onclick="window.signOut()" style="display: none; background-color: #c0392b; color: white; border: none; padding: 0.2rem 0.2rem; border-radius: 5px; font-size: 1.2rem; cursor: pointer; font-weight: bold; margin: 0;">
                 <i class="fas fa-sign-out-alt"></i> Esci
             </button>
+        </div>
+
+        <div id="user-email-container" style="display: flex; justify-content: flex-start; align-items: center; font-size: 1.2rem; color: #ccc; word-break: break-all; width: 100%;">
+            <span>Utente:&nbsp;</span>
+            <strong id="user-email-display" style="color: var(--text-color);"></strong>
         </div>
 
         <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
@@ -86,7 +91,7 @@
         <!-- Box Registrazione per Utenti Non Registrati -->
         <div id="registration-container" style="display: none; width: 100%; max-width: 350px; padding: 1rem; border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; background-color: var(--card-color, #222); box-shadow: 0 4px 15px rgba(0,0,0,0.4); text-align: left; box-sizing: border-box;">
             <h3 style="color: var(--primary); font-size: 1.5rem; margin-top: 0; margin-bottom: 0.4rem; text-align: center;">Richiesta Registrazione</h3>
-            <p style="font-size: 1rem; color: #ccc; margin-top: 0; margin-bottom: 0.8rem; text-align: center; line-height: 1.2;">Account Google non censito. Invia i tuoi dati per richiedere l'abilitazione all'amministratore.</p>
+            <p style="font-size: 1rem; color: #ccc; margin-top: 0; margin-bottom: 0.8rem; text-align: center; line-height: 1.2;">Account Google non abilitato. Invia i tuoi dati per richiedere l'abilitazione all'amministratore.</p>
             
             <div style="margin-bottom: 0.6rem;">
                 <label style="display: block; font-size: 1rem; margin-bottom: 0.2rem; color: #aaa;">Email autenticata:</label>
