@@ -18,11 +18,11 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/main-BPEaZXB_.js"></script>
-  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/modulepreload-polyfill-gsmbQHb9.js">
-  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/U14_FN-D0EQzx0b.js">
-  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/myTeamConfig-BtxeLqp9.js">
-  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/main-0UZLD73c.js">
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/main-DIjkx51s.js"></script>
+  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/modulepreload-polyfill-DqlrMbjl.js">
+  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/U14_FN-CaJr8keu.js">
+  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/myTeamConfig-BDH1tl85.js">
+  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/main-DahoCqlM.js">
   <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/main-DbZ7AZpq.css">
   <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/main-BHdtjL3S.css">
 </head>
@@ -30,22 +30,33 @@
 <body>
 
     <header id="main-header" style="display: flex; flex-direction: column; gap: 0.3rem; padding: 0.5rem;">
+        <!-- Prima riga: Titolo App, Versione e (SuperUser) Utenti Online -->
         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; width: 100%;">
             <div style="display: flex; align-items: center; gap: 0.6rem; margin: 0;">
                 <span style="font-size: 1.6rem; font-weight: bold; color: var(--primary);">My Basket App</span>
-                <div id="appVersion" class="app-version" style="margin: 0;color: var(--text-color);">Versione </div>
+                <div id="appVersion" class="app-version" style="margin: 0; color: var(--text-color);">Versione </div>
             </div>
-            
-            <button id="btn-logout" onclick="window.signOut()" style="display: none; background-color: #c0392b; color: white; border: none; padding: 0.2rem 0.2rem; border-radius: 5px; font-size: 1.2rem; cursor: pointer; font-weight: bold; margin: 0;">
+
+            <!-- Visibile solo per SuperUser -->
+            <div id="online-users-container" style="display: none; align-items: center; gap: 0.4rem; font-size: 1.3rem; color: var(--text-color); font-weight: bold;">
+                <i class="fas fa-users" style="color: var(--primary);"></i>
+                <span id="onlineCount">0</span>
+            </div>
+        </div>
+
+        <!-- Seconda riga: Email Utente (Sinistra) + Tasto Esci (Destra) -->
+        <div id="user-email-container" style="display: flex; justify-content: space-between; align-items: center; font-size: 1.2rem; color: #ccc; width: 100%;">
+            <div style="display: flex; align-items: center; word-break: break-all;">
+                <span>Utente:&nbsp;</span>
+                <strong id="user-email-display" style="color: var(--text-color);"></strong>
+            </div>
+
+            <button id="btn-logout" onclick="window.signOut()" style="display: none; background-color: #c0392b; color: white; border: none; padding: 0.2rem 0.6rem; border-radius: 5px; font-size: 1.2rem; cursor: pointer; font-weight: bold; margin: 0; white-space: nowrap;">
                 <i class="fas fa-sign-out-alt"></i> Esci
             </button>
         </div>
 
-        <div id="user-email-container" style="display: flex; justify-content: flex-start; align-items: center; font-size: 1.2rem; color: #ccc; word-break: break-all; width: 100%;">
-            <span>Utente:&nbsp;</span>
-            <strong id="user-email-display" style="color: var(--text-color);"></strong>
-        </div>
-
+        <!-- Terza riga: Logo, Squadra e Impostazioni -->
         <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
             <div style="display: flex; align-items: center; gap: 1rem;">
                 <img src="icon-192.png" alt="Logo Squadra" class="header-logo" id="logo-admin" style="margin: 0;">
