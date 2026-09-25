@@ -13,12 +13,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/modulepreload-polyfill-DAy9N5Te.js"></script>
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/U14_FN-BHzYNGtQ.js"></script>
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/myTeamConfig-C19_xRfP.js"></script>
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/main-DBr-JR8o.js"></script>
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/modulepreload-polyfill-DdS0-pXq.js"></script>
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/U14_FN-DOFi__HP.js"></script>
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/myTeamConfig-QJH3h6WR.js"></script>
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/main-DX4Cc3I3.js"></script>
   <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/main-DbZ7AZpq.css">
-  <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/calendario-D03uykDX.css">
+  <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/calendario-XZvYMgxF.css">
 </head>
 
 <body>
@@ -66,15 +66,14 @@
   
   <!-- Contenitore Google Calendar -->
   <div id="calendarViewContainer" class="hidden">
-    <!-- Barra di selezione vista e navigazione personalizzata -->
-    <div class="calendar-controls">
-      <button type="button" id="btnToday" class="btn-today">
-        <i class="fas fa-calendar-day"></i> Oggi
+    <!-- Overlay della barra di controllo posizionata sopra l'iframe -->
+    <div class="calendar-controls-overlay">
+      <button type="button" id="btnToday" class="btn-ctrl btn-today" title="Oggi">
+        <i class="fas fa-calendar-day"></i> 
       </button>
-      <div class="divider"></div>
-      <button type="button" class="btn-view active" data-mode="WEEK">Settimana</button>
-      <button type="button" class="btn-view" data-mode="MONTH">Mese</button>
-      <button type="button" class="btn-view" data-mode="AGENDA">Agenda</button>
+      <button type="button" class="btn-ctrl btn-view active" data-mode="WEEK">W</button>
+      <button type="button" class="btn-ctrl btn-view" data-mode="MONTH">M</button>
+      <button type="button" class="btn-ctrl btn-view" data-mode="AGENDA">A</button>
     </div>
 
     <iframe 
