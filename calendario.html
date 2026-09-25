@@ -13,12 +13,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/modulepreload-polyfill-DdS0-pXq.js"></script>
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/U14_FN-DOFi__HP.js"></script>
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/myTeamConfig-QJH3h6WR.js"></script>
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/main-DX4Cc3I3.js"></script>
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/modulepreload-polyfill-BQlD0JBB.js"></script>
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/U14_FN-CIX5kk1a.js"></script>
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/myTeamConfig-BlGr75i5.js"></script>
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/main-BY6aa0DW.js"></script>
   <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/main-DbZ7AZpq.css">
-  <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/calendario-XZvYMgxF.css">
+  <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/calendario-DZDCdTPn.css">
 </head>
 
 <body>
@@ -49,6 +49,17 @@
         </span>
 
     </div>
+
+    <!-- Controlli del calendario nell'header (nascosti di default) -->
+    <div id="calendarHeaderControls" class="calendar-header-controls hidden">
+      <button type="button" id="btnToday" class="btn-ctrl btn-today" title="Oggi">
+        <i class="fas fa-calendar-day"></i> Oggi
+      </button>
+      <button type="button" class="btn-ctrl btn-view active" data-mode="WEEK">Settimana</button>
+      <button type="button" class="btn-ctrl btn-view" data-mode="MONTH">Mese</button>
+      <button type="button" class="btn-ctrl btn-view" data-mode="AGENDA">Agenda</button>
+    </div>
+
   </header>
   <div id="searchContainer" class="search-bar-container hidden">
     <div class="search-input-wrapper">
@@ -66,15 +77,8 @@
   
   <!-- Contenitore Google Calendar -->
   <div id="calendarViewContainer" class="hidden">
-    <!-- Overlay della barra di controllo posizionata sopra l'iframe -->
-    <div class="calendar-controls-overlay">
-      <button type="button" id="btnToday" class="btn-ctrl btn-today" title="Oggi">
-        <i class="fas fa-calendar-day"></i> 
-      </button>
-      <button type="button" class="btn-ctrl btn-view active" data-mode="WEEK">W</button>
-      <button type="button" class="btn-ctrl btn-view" data-mode="MONTH">M</button>
-      <button type="button" class="btn-ctrl btn-view" data-mode="AGENDA">A</button>
-    </div>
+    <!-- Overlay bianco in basso a destra per coprire il bottone Feedback -->
+    <div class="calendar-feedback-overlay"></div>
 
     <iframe 
       id="googleCalendarIframe" 
