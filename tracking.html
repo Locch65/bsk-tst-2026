@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title> Modulo Atletica</title>
+    <title>Modulo Atletica</title>
     
 
     <link rel="manifest" href="manifest.json">
@@ -15,13 +15,12 @@
 
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/modulepreload-polyfill-CNxeBQSc.js"></script>
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/U14_FN-DI58kN4X.js"></script>
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/myTeamConfig-Bcpc3xMi.js"></script>
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/main-B3TXAxCz.js"></script>
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/modulepreload-polyfill-DjWRkCWI.js"></script>
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/U14_FN-D8fav45A.js"></script>
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/myTeamConfig-DpdZPLyA.js"></script>
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/main-Bs3in7kX.js"></script>
   <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/main-DbZ7AZpq.css">
-  <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/tracking-Dr-weI22.css">
+  <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/tracking-D8-uKdlo.css">
 </head>
 <body>
 
@@ -29,60 +28,29 @@
         <a href="index.html" class="home-btn" aria-label="Home">
             <i class="fas fa-home"></i>
         </a>
-        <h2> Modulo Atletica</h2>
+        <h2>Modulo Atletica</h2>
+        <button id="btnOpenSettings" class="settings-btn" aria-label="Impostazioni">
+            <i class="fas fa-cog"></i>
+        </button>
     </div>
 
     <div class="main-container">
         <!-- Pannello Sinistro: Controlli e Tabella Statistiche -->
         <div class="left-panel">
-            <!-- Barra Controlli -->
+            <!-- Barra Controlli Principale -->
             <div class="controls-bar">
-                <div class="control-item" style="flex: 1 1 100%;">
-                    <span>Sorgente:</span>
-                    <select id="sourceSelect" class="source-select" style="width: 100%;">
-                        <option value="SIM" selected>🧪 Simulazione Locale (Demo)</option>
-                        <option value="WS">⚡ WebSocket Locale (10 Hz)</option>
-                        <option value="FIREBASE">🔥 Firebase Live (Batch 1s)</option>
-                    </select>
-                </div>
-
-                <div class="control-item">
-                    <span>Heatmap:</span>
-                    <select id="heatmapSelect">
-                        <option value="NONE">-- Off --</option>
-                        <optgroup label="Squadra Casa">
-                            <option value="P01">P1 - Playmaker</option>
-                            <option value="P02">P2 - Guardia</option>
-                            <option value="P03">P3 - Ala Piccola</option>
-                            <option value="P04">P4 - Ala Grande</option>
-                            <option value="P05">P5 - Centro</option>
-                        </optgroup>
-                        <optgroup label="Avversari">
-                            <option value="OPP1">OPP1 - Playmaker Opp</option>
-                            <option value="OPP2">OPP2 - Guardia Opp</option>
-                            <option value="OPP3">OPP3 - Ala Piccola Opp</option>
-                            <option value="OPP4">OPP4 - Ala Grande Opp</option>
-                            <option value="OPP5">OPP5 - Centro Opp</option>
-                        </optgroup>
-                    </select>
-                </div>
-
-                <div class="control-item">
-                    <span>Finestra:</span>
+                
+                <!-- BOX HEATMAP CON BORDO SOTTILE -->
+                <div class="heatmap-box">
+                    <span class="heatmap-label">Heatmap:</span>
                     <select id="heatTimeSelect">
                         <option value="50">5 sec</option>
                         <option value="150" selected>15 sec</option>
                         <option value="300">30 sec</option>
                         <option value="600">1 min</option>
                     </select>
+                    <button id="btnResetHeat" class="btn-action btn-reset">🧹 Reset</button>
                 </div>
-
-                <div>
-                    <button id="btnResetHeat" class="btn-action btn-reset">🧹 Reset Heatmap</button>
-                </div>
-                <label class="control-item">
-                    <input type="checkbox" id="toggleRaw"> Grezzi
-                </label>
 
                 <label class="control-item">
                     <input type="checkbox" id="toggleCentroidHome" checked> Rete Tattica (Casa)
@@ -95,21 +63,16 @@
 
             <!-- Tabella Giocatori -->
             <div class="dashboard-section">
-                <div class="dashboard-header">
-                    <h3>📊 Live Performance</h3>
-                    <button id="btnResetStats" class="btn-mini-reset">🔄 Reset Dati</button>
-                </div>
                 <div class="table-container">
-<div class="tab-container">
-    <button id="tabPositional" class="tab-btn active" onclick="switchStatsTab('POSITIONAL')">📍 Dati Posizionali</button>
-    <button id="tabZones" class="tab-btn" onclick="switchStatsTab('SPEED_ZONES')">⚡ Speed Zones</button>
-</div>
+                    <div class="tab-container">
+                        <button id="tabPositional" class="tab-btn active" onclick="switchStatsTab('POSITIONAL')">📍 Dati Posizionali</button>
+                        <button id="tabZones" class="tab-btn" onclick="switchStatsTab('SPEED_ZONES')">⚡ Speed Zones</button>
+                    </div>
 
-<table class="stats-table">
-    <thead id="statsHeader"></thead>
-    <tbody id="statsBody"></tbody>
-</table>
-                    
+                    <table class="stats-table">
+                        <thead id="statsHeader"></thead>
+                        <tbody id="statsBody"></tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -120,7 +83,46 @@
                 <canvas id="court" width="840" height="450"></canvas>
             </div>
             <!-- Pulsante Pausa sempre visibile in basso -->
-            <button id="btnPause" class="btn-pause">⏸️ Pausa</button>
+            <button id="btnPause" class="btn-pause">⏸ Pausa</button>
+        </div>
+    </div>
+
+    <!-- POPUP IMPOSTAZIONI -->
+    <div id="settingsModal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>⚙️ Impostazioni Tracking</h3>
+            </div>
+            <div class="modal-body">
+                <div class="modal-item">
+                    <label for="sourceSelect">Sorgente Dati:</label>
+                    <select id="sourceSelect" class="source-select" style="width: 100%;">
+                        <option value="SIM" selected>🧪 Simulazione Locale (Demo)</option>
+                        <option value="WS">⚡ WebSocket Locale (10 Hz)</option>
+                        <option value="FIREBASE">🔥 Firebase Live (Batch 1s)</option>
+                    </select>
+                </div>
+
+                <!-- CHECKBOX MOSTRA AVVERSARI -->
+                <div class="modal-item checkbox-item">
+                    <label>
+                        <input type="checkbox" id="toggleOpponents" checked> Mostra avversari
+                    </label>
+                </div>
+
+                <div class="modal-item checkbox-item">
+                    <label>
+                        <input type="checkbox" id="toggleRaw"> Mostra dati sensori
+                    </label>
+                </div>
+
+                <div class="modal-item">
+                    <button id="btnResetStats" class="btn-mini-reset" style="width: 100%; padding: 0.8rem;">🔄 Reset Dati</button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnCloseSettings" class="btn-modal-close">Chiudi</button>
+            </div>
         </div>
     </div>
 
