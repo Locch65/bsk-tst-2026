@@ -15,12 +15,12 @@
 
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/modulepreload-polyfill-CSXAh5Tx.js"></script>
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/U14_FN-BDWvM2uG.js"></script>
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/myTeamConfig-D2KpXU-6.js"></script>
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/main-DRhhZBN0.js"></script>
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/modulepreload-polyfill-Dqg1c5Fq.js"></script>
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/U14_FN-BE5Jkzac.js"></script>
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/myTeamConfig-B9ntRslp.js"></script>
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/main-DXmF-NKR.js"></script>
   <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/main-DbZ7AZpq.css">
-  <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/tracking-DOcnm1Wi.css">
+  <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/tracking-czpa39aR.css">
 </head>
 <body>
 
@@ -64,9 +64,10 @@
             <!-- Tabella Giocatori -->
             <div class="dashboard-section">
                 <div class="table-container">
-                    <div class="tab-container">
-                        <button id="tabPositional" class="tab-btn active" onclick="switchStatsTab('POSITIONAL')">📍 Dati Posizionali</button>
-                        <button id="tabZones" class="tab-btn" onclick="switchStatsTab('SPEED_ZONES')">⚡ Speed Zones</button>
+                    <div class="stats-tabs">
+                        <button id="tabPositional" class="tab-btn active" onclick="switchStatsTab('POSITIONAL')">Dati Posizionali</button>
+                        <button id="tabZones" class="tab-btn" onclick="switchStatsTab('SPEED_ZONES')">Speed Zones</button>
+                        <button id="tabFatigue" class="tab-btn" onclick="switchStatsTab('FATIGUE_LOAD')"> Load & Fatigue</button>
                     </div>
 
                     <table class="stats-table">
@@ -132,6 +133,54 @@
             </div>
             <div class="modal-footer">
                 <button id="btnCloseSettings" class="btn-modal-close">Chiudi</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Legenda Metriche Completa -->
+    <div id="metricsHelpModal" class="modal-overlay hidden" onclick="window.closeMetricsHelp(event)">
+        <div class="modal-content metrics-modal" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h3>📖 Legenda Metriche</h3>
+            </div>
+            
+            <div class="modal-body">
+                <!-- TAB 1: POSIZIONALI -->
+                <h4>📍 Dati Posizionali</h4>
+                <ul>
+                    <li><strong>Dist. (m):</strong> Distanza totale percorsa dall'atleta espressa in metri.</li>
+                    <li><strong>Vel. (km/h):</strong> Velocità istantanea registrata in tempo reale.</li>
+                    <li><strong>Max (km/h):</strong> Picco massimo di velocità raggiunto durante la sessione.</li>
+                </ul>
+
+                <!-- TAB 2: SPEED ZONES -->
+                <h4>⚡ Speed Zones</h4>
+                <ul>
+                    <li><strong>Z1 (&lt;6 km/h):</strong> Camminata / Recupero statico.</li>
+                    <li><strong>Z2 (6-12 km/h):</strong> Corsa lenta / Trottata leggera.</li>
+                    <li><strong>Z3 (12-18 km/h):</strong> Corsa moderata / Raccordo.</li>
+                    <li><strong>Z4 (18-22 km/h):</strong> Corsa ad alta intensità (High Speed).</li>
+                    <li><strong>Z5 (&gt;22 km/h):</strong> Sprint massimale.</li>
+                </ul>
+
+                <!-- TAB 3: FATIGUE & LOAD -->
+                <h4>🧠 Fatigue & Load Index</h4>
+                <ul>
+                    <li><strong>Load Index (0-100):</strong> Punteggio di carico istantaneo negli ultimi 15 secondi di gioco.</li>
+                    <li><strong>% High Speed:</strong> Quota di tempo trascorsa in Z4 e Z5 (&gt;18 km/h).</li>
+                    <li><strong>Picchi Acc/Dec:</strong> Variazioni brusche di velocità (&gt;2.2 m/s²).</li>
+                </ul>
+
+                <h4>🚦 Soglie di Stato</h4>
+                <ul class="badge-legend-list">
+                    <li><span class="fatigue-badge ok">OK</span> Load Index &le; 25: Carico normale.</li>
+                    <li><span class="fatigue-badge warning">CARICO</span> Load Index &gt; 25: Affaticamento progressivo.</li>
+                    <li><span class="fatigue-badge alert">CAMBIO</span> Load Index &gt; 50: Esaurimento/Picco alto.</li>
+                </ul>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn-close-modal" type="button" onclick="window.closeMetricsHelp(event)">Chiudi</button>
             </div>
         </div>
     </div>
