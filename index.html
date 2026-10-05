@@ -18,11 +18,11 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/main-CrTxoaWk.js"></script>
-  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/modulepreload-polyfill-Co9IYM8Z.js">
-  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/U14_FN-Deh0na7b.js">
-  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/myTeamConfig-78EDKahp.js">
-  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/main-CH9W2StR.js">
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/main-wmNLkFuT.js"></script>
+  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/modulepreload-polyfill-D4HzjN-D.js">
+  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/U14_FN-D5-b49pY.js">
+  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/myTeamConfig-BG_2XSrT.js">
+  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/main-PRwvHdvs.js">
   <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/main-DbZ7AZpq.css">
   <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/main-DF-fMWoK.css">
 </head>
@@ -342,11 +342,23 @@
         </div>
     </div>
 
-    <div id="installBanner" style="display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #ffffff; padding: 15px 20px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 9999; text-align: center; max-width: 90%;">
-        <p style="margin: 0 0 10px 0; font-weight: bold; color: #333;">Vuoi installare l'App sul tuo dispositivo?</p>
-        <button id="btnInstallPWA" style="background: #007bff; color: white; border: none; padding: 8px 16px; border-radius: 5px; font-weight: bold; cursor: pointer;">
-            Installa Ora
-        </button>
+    <!-- Banner Installazione Custom con supporto iOS e pulsante Chiudi -->
+    <div id="installBanner" style="display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #ffffff; color: #333; padding: 15px 20px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); z-index: 9999; text-align: center; max-width: 90%; width: 380px;">
+        <p id="installBannerTitle" style="margin: 0 0 8px 0; font-weight: bold; font-size: 1.4rem;">Vuoi installare l'App sul tuo dispositivo?</p>
+        
+        <!-- Istruzioni specifiche per iPhone / iOS (inizialmente nascoste) -->
+        <p id="iosInstallInstructions" style="display: none; font-size: 1.1rem; color: #555; margin: 0 0 12px 0; line-height: 1.3;">
+            Su iPhone, tocca il tasto Condividi <i class="fas fa-share-from-square" style="color: #007bff;"></i> in Safari e seleziona <strong>"Aggiungi alla schermata Home"</strong>.
+        </p>
+
+        <div style="display: flex; gap: 10px; justify-content: center; align-items: center; margin-top: 10px;">
+            <button id="btnInstallPWA" style="background: #007bff; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; font-size: 1.2rem; cursor: pointer; flex: 1;">
+                Installa Ora
+            </button>
+            <button id="btnCloseInstallBanner" onclick="chiudiBannerInstallazione()" style="background: #e0e0e0; color: #333; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; font-size: 1.2rem; cursor: pointer;">
+                Annulla
+            </button>
+        </div>
     </div>
 </body>
 </html>
