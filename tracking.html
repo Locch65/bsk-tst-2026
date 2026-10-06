@@ -15,12 +15,12 @@
 
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/modulepreload-polyfill-Dqg1c5Fq.js"></script>
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/U14_FN-BE5Jkzac.js"></script>
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/myTeamConfig-B9ntRslp.js"></script>
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/main-DXmF-NKR.js"></script>
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/modulepreload-polyfill-Di6tEpl3.js"></script>
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/U14_FN-BzSNmxpK.js"></script>
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/myTeamConfig-CUhfgMKA.js"></script>
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/main-wwBS0PRD.js"></script>
   <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/main-DbZ7AZpq.css">
-  <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/tracking-czpa39aR.css">
+  <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/tracking-Ct4tZO57.css">
 </head>
 <body>
 
@@ -28,30 +28,22 @@
         <a href="index.html" class="home-btn" aria-label="Home">
             <i class="fas fa-home"></i>
         </a>
-        <h2>Modulo Atletica</h2>
+        <div class="view-toggle-bar">
+            <button id="btnViewAthletics" class="toggle-view-btn active" type="button">🏃 Atletica</button>
+            <button id="btnViewTactics" class="toggle-view-btn" type="button">📋 Tattica</button>
+        </div>
         <button id="btnOpenSettings" class="settings-btn" aria-label="Impostazioni">
             <i class="fas fa-cog"></i>
         </button>
     </div>
 
     <div class="main-container">
+
         <!-- Pannello Sinistro: Controlli e Tabella Statistiche -->
         <div class="left-panel">
             <!-- Barra Controlli Principale -->
             <div class="controls-bar">
                 
-                <!-- BOX HEATMAP CON BORDO SOTTILE -->
-                <div class="heatmap-box">
-                    <span class="heatmap-label">Heatmap:</span>
-                    <select id="heatTimeSelect">
-                        <option value="50">5 sec</option>
-                        <option value="150" selected>15 sec</option>
-                        <option value="300">30 sec</option>
-                        <option value="600">1 min</option>
-                    </select>
-                    <button id="btnResetHeat" class="btn-action btn-reset">🧹 Reset</button>
-                </div>
-
                 <label class="control-item">
                     <input type="checkbox" id="toggleCentroidHome" checked> Rete Tattica (Casa)
                 </label>
@@ -61,11 +53,44 @@
                 </label>
             </div>
 
+            <!-- Card Metriche Tattiche Casa -->
+            <div class="tactical-card" id="tacticalMetricsCard">
+                <h3>Metriche Tattiche (Casa)</h3>
+                <div class="metric-row">
+                    <span class="metric-label">Stretch Index (Spaziamento):</span>
+                    <span class="metric-value" id="valStretchIndex">0.00 m</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Velocità Baricentro:</span>
+                    <span class="metric-value" id="valCentroidSpeed">0.00 m/s</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Occupazione Campo (LxA):</span>
+                    <span class="metric-value" id="valSpread">0.0m x 0.0m</span>
+                </div>
+            </div>
+            <!-- Card Metriche Tattiche Avversari -->
+            <div class="tactical-card" id="tacticalMetricsCardOpp" style="display: none;">
+                <h3 style="color: #ff7700;">Metriche Tattiche (Avversari)</h3>
+                <div class="metric-row">
+                    <span class="metric-label">Stretch Index (Spaziamento):</span>
+                    <span class="metric-value" id="valStretchIndexOpp" style="color: #ff7700;">0.00 m</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Velocità Baricentro:</span>
+                    <span class="metric-value" id="valCentroidSpeedOpp" style="color: #ff7700;">0.00 m/s</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Occupazione Campo (LxA):</span>
+                    <span class="metric-value" id="valSpreadOpp" style="color: #ff7700;">0.0m x 0.0m</span>
+                </div>
+            </div>            
+
             <!-- Tabella Giocatori -->
             <div class="dashboard-section">
                 <div class="table-container">
                     <div class="stats-tabs">
-                        <button id="tabPositional" class="tab-btn active" onclick="switchStatsTab('POSITIONAL')">Dati Posizionali</button>
+                        <button id="tabPositional" class="tab-btn active" onclick="switchStatsTab('POSITIONAL')"> Positions</button>
                         <button id="tabZones" class="tab-btn" onclick="switchStatsTab('SPEED_ZONES')">Speed Zones</button>
                         <button id="tabFatigue" class="tab-btn" onclick="switchStatsTab('FATIGUE_LOAD')"> Load & Fatigue</button>
                     </div>
@@ -76,6 +101,19 @@
                     </table>
                 </div>
             </div>
+
+            <!-- BOX HEATMAP CON BORDO SOTTILE -->
+            <div class="heatmap-box">
+                <span class="heatmap-label">Heatmap:</span>
+                <select id="heatTimeSelect">
+                    <option value="50">5 sec</option>
+                    <option value="150" selected>15 sec</option>
+                    <option value="300">30 sec</option>
+                    <option value="600">1 min</option>
+                </select>
+                <button id="btnResetHeat" class="btn-action btn-reset">🧹 Reset</button>
+            </div>
+
         </div>
 
         <!-- Sezione Campo Basket -->
@@ -104,14 +142,8 @@
                     </select>
                 </div>
 
-                <!-- SEZIONE CONTROLLO DIMENSIONE FONT -->
                 <div class="modal-item">
-                    <label>Dimensione Testo:</label>
-                    <div class="font-size-control">
-                        <button id="btnFontSizeDec" class="btn-font" type="button" aria-label="Riduci testo">-</button>
-                        <span id="fontSizeDisplay">62.5%</span>
-                        <button id="btnFontSizeInc" class="btn-font" type="button" aria-label="Aumenta testo">+</button>
-                    </div>
+                    <button id="btnResetStats" class="btn-mini-reset" style="width: 100%; padding: 0.8rem;">🔄 Reset Dati</button>
                 </div>
 
                 <!-- CHECKBOX MOSTRA AVVERSARI -->
@@ -127,9 +159,15 @@
                     </label>
                 </div>
 
-                <div class="modal-item">
-                    <button id="btnResetStats" class="btn-mini-reset" style="width: 100%; padding: 0.8rem;">🔄 Reset Dati</button>
+                <div class="modal-item font-size-container">
+                    <label>Dimensione Testo:</label>
+                    <div class="font-size-control">
+                        <button id="btnFontSizeDec" class="btn-font" type="button" aria-label="Riduci testo">-</button>
+                        <span id="fontSizeDisplay">62.5%</span>
+                        <button id="btnFontSizeInc" class="btn-font" type="button" aria-label="Aumenta testo">+</button>
+                    </div>
                 </div>
+
             </div>
             <div class="modal-footer">
                 <button id="btnCloseSettings" class="btn-modal-close">Chiudi</button>
@@ -168,7 +206,7 @@
                 <ul>
                     <li><strong>Load Index (0-100):</strong> Punteggio di carico istantaneo negli ultimi 15 secondi di gioco.</li>
                     <li><strong>% High Speed:</strong> Quota di tempo trascorsa in Z4 e Z5 (&gt;18 km/h).</li>
-                    <li><strong>Picchi Acc/Dec:</strong> Variazioni brusche di velocità (&gt;2.2 m/s²).</li>
+                    <li><strong>Picchi Acc/Dec:</strong> Variazioni brusche di velocità (&gt;2.2 m/s²) dall'inizio della sessione.</li>
                 </ul>
 
                 <h4>🚦 Soglie di Stato</h4>
