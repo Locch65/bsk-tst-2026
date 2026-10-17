@@ -7,32 +7,51 @@ const SW_VERSION = urlParams.get('v') || '2.0.0'; // Fallback di sicurezza se ma
 
 const CACHE_NAME = "basket-app-cache-" + SW_VERSION;
 // Usa percorsi RELATIVI per GitHub Pages (niente "/" iniziale)
+// const FILES_TO_CACHE = [
+//   "./index.html?v=" + SW_VERSION,
+//   "./calendario.html?v=" + SW_VERSION,
+//   "./match.html?v=" + SW_VERSION,
+//   "./direttavideo.html?v=" + SW_VERSION,
+//   "./roster.html?v=" + SW_VERSION,
+//   "./anagrafica.html?v=" + SW_VERSION,
+
+//   "./calendario.css?v=" + SW_VERSION,
+//   "./match.css?v=" + SW_VERSION,
+//   "./direttavideo.css?v=" + SW_VERSION,
+
+//   "./calendario.js?v=" + SW_VERSION,
+//   "./match.js?v=" + SW_VERSION,
+//   "./direttavideo.js?v=" + SW_VERSION,
+//   "./common.js?v=" + SW_VERSION,
+//   "./myTeamConfig.js?v=" + SW_VERSION,
+
+//   "./icon-192.png",
+//   "./icon-512.png"
+// ];
+
+// // Install: cache i file della nuova versione
+// self.addEventListener("install", (event) => {
+//   event.waitUntil(
+//     caches.open(CACHE_NAME).then((cache) => cache.addAll(FILES_TO_CACHE))
+//   );
+//   self.skipWaiting();
+// });
+
 const FILES_TO_CACHE = [
-  "./index.html?v=" + SW_VERSION,
-  "./calendario.html?v=" + SW_VERSION,
-  "./match.html?v=" + SW_VERSION,
-  "./direttavideo.html?v=" + SW_VERSION,
-  "./roster.html?v=" + SW_VERSION,
-  "./anagrafica.html?v=" + SW_VERSION,
-
-  "./calendario.css?v=" + SW_VERSION,
-  "./match.css?v=" + SW_VERSION,
-  "./direttavideo.css?v=" + SW_VERSION,
-
-  "./calendaio.js?v=" + SW_VERSION,
-  "./match.js?v=" + SW_VERSION,
-  "./direttavideo.js?v=" + SW_VERSION,
-  "./common.js?v=" + SW_VERSION,
-  "./myTeamConfig.js?v=" + SW_VERSION,
-
+  "./",
+  "./index.html",
   "./icon-192.png",
   "./icon-512.png"
 ];
 
-// Install: cache i file della nuova versione
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(FILES_TO_CACHE))
+    caches.open(CACHE_NAME).then((cache) => {
+      // Usiamo add all'interno di un catch o facciamo un add di file sicuri
+      return cache.addAll(FILES_TO_CACHE).catch(err => {
+        console.error("Errore durante il caching dei file:", err);
+      });
+    })
   );
   self.skipWaiting();
 });
