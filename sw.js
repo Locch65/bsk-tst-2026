@@ -73,7 +73,7 @@ self.addEventListener("fetch", (event) => {
   // Non gestire richieste non-GET o cross-origin
   const url = new URL(req.url);
   if (req.method !== "GET" || url.origin !== self.location.origin) {
-    event.respondWith(fetch(req));
+    //??event.respondWith(fetch(req));
     return;
   }
 
