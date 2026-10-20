@@ -19,11 +19,11 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/main-DaBBEFK1.js"></script>
-  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/modulepreload-polyfill-BCX3St90.js">
-  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/U14_FN-rUjz4BBj.js">
-  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/myTeamConfig-BJB633sl.js">
-  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/main-DiYSOpbu.js">
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/main--lqxtbZg.js"></script>
+  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/modulepreload-polyfill-BCkAlAmR.js">
+  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/U14_FN-Cqcv64lf.js">
+  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/myTeamConfig-jHqfE1Ox.js">
+  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/main-DAmy0n11.js">
   <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/main-DbZ7AZpq.css">
   <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/main-UaAK6kXa.css">
 </head>
@@ -203,11 +203,20 @@
                 <i class="fas fa-calendar-alt"></i>
                 <span>Calendario</span>
             </a>
+            <div style="display: flex; flex-direction: column; gap: 0.5rem; flex: 1;">
 
-            <div class="menu-button" onclick="ShowAppuntamenti()" style="position: relative;">
-                <i class="fas fa-dumbbell"></i>
-                <span>Appuntamenti</span>
-                <span id="badge-appuntamenti" style="display: none; position: absolute; top: 5px; right: 5px; background-color: red; color: white; font-size: 1.2rem; font-weight: bold; padding: 2px 6px; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">NEW</span>
+                <!-- Bottone Convocazioni (inizialmente nascosto) -->
+                <div id="btn-convocazioni" class="menu-button" style="display: none; position: relative;" onclick="window.ShowConvocazioni()">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>Convocazioni</span>
+                    <span id="badge-convocazioni" style="position: absolute; top: 5px; right: 5px; background-color: red; color: white; font-size: 1.2rem; font-weight: bold; padding: 2px 6px; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); animation: pulse 1.5s infinite;">NEW</span>
+                </div>
+
+                <div class="menu-button" onclick="ShowAppuntamenti()" style="position: relative;">
+                    <i class="fas fa-dumbbell"></i>
+                    <span>Appuntamenti</span>
+                    <span id="badge-appuntamenti" style="display: none; position: absolute; top: 5px; right: 5px; background-color: red; color: white; font-size: 1.2rem; font-weight: bold; padding: 2px 6px; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">NEW</span>
+                </div>
             </div>
 
             <a href="maps.html" class="menu-button">
@@ -215,6 +224,7 @@
                 <span>Mappa Trasferte</span>
             </a>
         </div>
+
     </div>
     
     <div id="settingsPopup" class="hidden" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--overlay); z-index: 1500; justify-content: center; align-items: center;">
