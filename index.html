@@ -19,11 +19,11 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/main--lqxtbZg.js"></script>
-  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/modulepreload-polyfill-BCkAlAmR.js">
-  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/U14_FN-Cqcv64lf.js">
-  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/myTeamConfig-jHqfE1Ox.js">
-  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/main-DAmy0n11.js">
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/main-D_DaOZ9k.js"></script>
+  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/modulepreload-polyfill-BwwJNh7i.js">
+  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/U14_FN-BwZElKME.js">
+  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/myTeamConfig-SAaOcmLE.js">
+  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/main-CrbeoH8E.js">
   <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/main-DbZ7AZpq.css">
   <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/main-UaAK6kXa.css">
 </head>
@@ -392,10 +392,16 @@
                         <span id="pendingRequestsCountPopup">0</span>
                     </button>
                 </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.6rem;">
+                    <span>Users History:</span>
+                    <button onclick="window.ShowUsersHistory()" style="min-width:60px; background: var(--primary); color: white; border: none; padding: 0.4rem 1rem; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 1.1rem;">
+                        Load
+                    </button>
+                </div>                
                 <!-- Riga 3: Sync Firebase -->
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <span>Sync Firebase</span>
-                    <button onclick="window.syncronizeFirebase()" style="min-width:60px;background: var(--primary); color: white; border: none; padding: 0.4rem 1rem; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 1.1rem;">
+                    <button onclick="window.syncronizeFirebase()" style="min-width:60px;background: red; color: white; border: none; padding: 0.4rem 1rem; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 1.1rem;">
                         Sync
                     </button>
                 </div>
@@ -431,5 +437,31 @@
         </div>
     </div>
 
+    <!-- POPUP: Elenco Users History -->
+    <div id="usersHistoryPopup" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--overlay); z-index: 1700; justify-content: center; align-items: center;">
+        <div class="popup-content" style="max-width: 95%; width: 550px; max-height: 85vh; display: flex; flex-direction: column; text-align: center;">
+            <h3 style="color: var(--primary); font-size: 1.8rem; margin-bottom: 1rem;">Users History</h3>
+            
+            <div style="flex: 1; overflow-y: auto; margin-bottom: 1.2rem; border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 0.5rem;">
+                <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 1.1rem; color: var(--text-color); table-layout: fixed;">
+                    <thead>
+                        <tr style="background: rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.2);">
+                            <th onclick="window.sortUsersHistoryTable('email')" style="padding: 8px; width: 60%; cursor: pointer;" title="Clicca per ordinare">
+                                Email <i class="fas fa-sort" style="font-size: 0.8rem; opacity: 0.7;"></i>
+                            </th>
+                            <th onclick="window.sortUsersHistoryTable('loginTime')" style="padding: 8px; width: 40%; cursor: pointer;" title="Clicca per ordinare">
+                                Login Time <i class="fas fa-sort" style="font-size: 0.8rem; opacity: 0.7;"></i>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="users-history-table-body">
+                        <!-- I dati verranno inseriti dinamicamente via JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <button class="popup-btn" onclick="window.chiudiPopupUsersHistory()" style="background-color: #444; width: 100%; margin-top: 0;">Chiudi</button>
+        </div>
+    </div>    
 </body>
 </html>
