@@ -7,7 +7,19 @@ const SW_VERSION = urlParams.get('v') || '2.0.0'; // Fallback di sicurezza se ma
 
 // Recupera la lista delle squadre per cui l'utente è registrato (es. "[T-001, T-002]") dai parametri dell'URL del SW
 const userTeamsParam = urlParams.get('teams') || '';
-console.log("==============> sw.js: " + userTeamsParam);
+
+// Parsing robusto della lista squadre (compatibile con JSON stringify/encodeURIComponent e stringhe grezze)
+let userTeams = [];
+try {
+  const decoded = decodeURIComponent(userTeamsParam);
+  const parsed = JSON.parse(decoded);
+  if (Array.isArray(parsed)) {
+    userTeams = parsed.map(t => String(t).trim());
+  }
+} catch (e) {
+  userTeams = userTeamsParam.replace(/[\[\]"]/g, '').split(',').map(t => t.trim()).filter(Boolean);
+}
+
 const CACHE_NAME = "basket-app-cache-" + SW_VERSION;
 // Usa percorsi RELATIVI per GitHub Pages (niente "/" iniziale)
 // const FILES_TO_CACHE = [
@@ -136,10 +148,6 @@ self.addEventListener('push', (event) => {
 
   // Se è specificata una squadra nel titolo, controlla se l'utente è registrato per quella squadra
   if (targetTeam) {
-    // Pulisci e splitta la stringa delle squadre dell'utente (es. "[T-001, T-002]" -> ["T-001", "T-002"])
-    const cleanedTeamsStr = userTeamsParam.replace(/[\[\]]/g, '');
-    const userTeams = cleanedTeamsStr ? cleanedTeamsStr.split(',').map(t => t.trim()) : [];
-
     // Se l'utente non è registrato per questa squadra, interrompi e non mostrare la notifica
     if (!userTeams.includes(targetTeam)) {
       return;
