@@ -7,18 +7,7 @@ const SW_VERSION = urlParams.get('v') || '2.0.0'; // Fallback di sicurezza se ma
 
 // Recupera la lista delle squadre per cui l'utente è registrato (es. "[T-001, T-002]") dai parametri dell'URL del SW
 const userTeamsParam = urlParams.get('teams') || '';
-
-// Parsing robusto della lista squadre (compatibile con JSON stringify/encodeURIComponent e stringhe grezze)
-let userTeams = [];
-try {
-  const decoded = decodeURIComponent(userTeamsParam);
-  const parsed = JSON.parse(decoded);
-  if (Array.isArray(parsed)) {
-    userTeams = parsed.map(t => String(t).trim());
-  }
-} catch (e) {
-  userTeams = userTeamsParam.replace(/[\[\]"]/g, '').split(',').map(t => t.trim()).filter(Boolean);
-}
+const userTeams = userTeamsParam ? userTeamsParam.split(/\s+/) : [];
 
 const CACHE_NAME = "basket-app-cache-" + SW_VERSION;
 // Usa percorsi RELATIVI per GitHub Pages (niente "/" iniziale)
