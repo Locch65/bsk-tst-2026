@@ -147,7 +147,7 @@ self.addEventListener('push', (event) => {
   const options = {
     body: data.notification?.body || data.body || "Hai un nuovo aggiornamento.",
     icon: "./icon-192.png",      // Icona principale che compare nel banner della notifica
-    badge: "./icon-192.png",     // Iconcina piccola che compare nella status bar del telefono
+    badge: "./badge-96.png",     // Iconcina piccola che compare nella status bar del telefono
     vibrate: [200, 100, 200],    // Pattern di vibrazione (attiva anche il feedback sonoro associato alle notifiche di sistema)
     tag: 'basket-app-notifica',  // Evita che le notifiche si sovrappongano inutilmente raggruppandole
     renotify: true,
