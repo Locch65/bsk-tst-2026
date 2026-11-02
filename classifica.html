@@ -11,15 +11,15 @@
     <link rel="manifest" href="manifest.json">
 
 
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/classifica-cRQbYMYz.js"></script>
-  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/modulepreload-polyfill-BfFUxbhK.js">
-  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/myTeamConfig-DWFZvsWZ.js">
-  <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/classifica-CVGbI6N8.css">
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/classifica-QZa32vQZ.js"></script>
+  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/modulepreload-polyfill-C5KFZWay.js">
+  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/myTeamConfig-D9bqaBYZ.js">
+  <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/classifica-d62BnXG0.css">
 </head>
-<body>
+<body style="height: 100vh; overflow: hidden; margin: 0;">
 
-<div class="container">
-    <div class="header-container">
+<div class="container" style="height: 100vh; display: flex; flex-direction: column; overflow: hidden; padding-bottom: 20px; box-sizing: border-box;">
+    <div class="header-container" style="flex-shrink: 0; position: sticky; top: 0; z-index: 100; background: inherit;">
         <div class="brand-section">
             <a href="index.html" class="home-btn" aria-label="Home">
                 <i class="fas fa-home"></i>
@@ -38,41 +38,41 @@
     </div>
 
     <!-- Contenitore del filtro aggiornato con Label + Bottone dinamico/ciclico -->
-    <div class="filter-container" style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+    <div class="filter-container" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; gap: 10px;">
         <span style="font-size: 1.4rem; font-weight: bold; color: var(--fip-blue);">Campionato:</span>
         <div id="campionato-selector-wrapper">
             <!-- Il bottone ciclico o la stringa fissa verranno generati dinamicamente via JS -->
         </div>
     </div>
 
-    <div id="hint-classifica" style="text-align: center; color: #64748b; font-size: 1.2rem; margin-bottom: 10px; font-style: italic;">
+    <div id="hint-classifica" style="flex-shrink: 0; text-align: center; color: #64748b; font-size: 1.2rem; margin-bottom: 10px; font-style: italic;">
         <i class="fas fa-info-circle" style="margin-right: 5px;"></i> Clicca su una squadra per vedere le sue partite...
     </div>
 
-    <div id="table-container">
+    <div id="table-container" style="flex-shrink: 0;">
         <div class="loading">Sincronizzazione dati FIP...</div>
     </div>
 
-    <div id="details-container" class="hidden">
-        <div class="header-details">
+    <div id="details-container" class="hidden" style="display: flex; flex-direction: column; flex: 1; overflow: hidden;">
+        <div class="header-details" style="flex-shrink: 0;">
             <button onclick="showClassifica()" class="back-btn">
                 <i class="fas fa-arrow-left"></i> Back
             </button>
             <h3 id="selected-team-name">Nome Squadra</h3>
         </div>
-        <div id="team-matches-list">
+        <div id="team-matches-list" style="flex: 1; overflow-y: auto; overflow-x: hidden;">
         </div>
     </div>
 
-    <div id="nota-classifica" class="hidden" style="color: #ef4444; font-size: 1.2rem; font-weight: bold; margin-bottom: 15px; text-align: center;">
+    <div id="nota-classifica" class="hidden" style="flex-shrink: 0; color: #ef4444; font-size: 1.2rem; font-weight: bold; margin-bottom: 15px; text-align: center;">
         * classifica provvisoria
     </div>
 
-    <button id="btn-calendario-completo" class="full-calendar-btn" onclick="mostraCalendarioCompleto()">
+    <button id="btn-calendario-completo" class="full-calendar-btn" onclick="mostraCalendarioCompleto()" style="flex-shrink: 0;">
         <i class="fas fa-calendar-alt"></i> Visualizza Calendario Completo
     </button>
     
-    <div class="nav-button-container">
+    <div class="nav-button-container" style="flex-shrink: 0;">
         <a id="fip-external-link" href="#" target="_blank" class="fip-btn">
             Vai al sito ufficiale FIP <i class="fas fa-external-link-alt" style="font-size: 1.6rem; margin-left: 5px;"></i>
         </a>
