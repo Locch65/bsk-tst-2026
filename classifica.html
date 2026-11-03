@@ -11,10 +11,10 @@
     <link rel="manifest" href="manifest.json">
 
 
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/classifica-BLn7TTAd.js"></script>
-  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/modulepreload-polyfill-BbOj9mmA.js">
-  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/myTeamConfig-DqSPUxjT.js">
-  <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/classifica-CqSVBC0W.css">
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/classifica-B1lxZ898.js"></script>
+  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/modulepreload-polyfill-D8of4RaW.js">
+  <link rel="modulepreload" crossorigin href="/bsk-tst-2026/assets/myTeamConfig-DUTITc-i.js">
+  <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/classifica-CXpcPQRF.css">
 </head>
 <body style="height: 100dvh; height: 100vh; overflow: hidden; margin: 0;">
 
@@ -44,19 +44,27 @@
             <!-- Il bottone ciclico o la stringa fissa verranno generati dinamicamente via JS -->
         </div>
     </div>
-        <button id="btn-calendario-completo" class="full-calendar-btn" onclick="mostraCalendarioCompleto()" style="flex-shrink: 0;">
-            <i class="fas fa-calendar-alt"></i> Visualizza Calendario Completo
+
+    <!-- I DUE BOTTONI POSIZIONATI IN ALTO (dopo i filtri e prima dei contenitori) -->
+    <div class="action-buttons-row" style="flex-shrink: 0; margin-bottom: 8px;">
+        <button id="btn-calendario-completo" class="unified-bottom-btn" onclick="mostraCalendarioCompleto()">
+            <i class="fas fa-calendar-alt"></i> Calendario
         </button>
+        
+        <a id="fip-external-link" href="#" target="_blank" class="unified-bottom-btn">
+            Sito FIP <i class="fas fa-external-link-alt" style="margin-left: 5px;"></i>
+        </a>
+    </div>
 
     <div id="hint-classifica" style="flex-shrink: 0; text-align: center; color: #64748b; font-size: 1.2rem; margin-bottom: 10px; font-style: italic;">
         <i class="fas fa-info-circle" style="margin-right: 5px;"></i> Clicca su una squadra per vedere le sue partite...
     </div>
 
-    <div id="table-container" style="flex: 1; overflow-y: auto; overflow-x: hidden; min-height: 0; margin-bottom: 70px;">
+    <div id="table-container" style="flex: 1; overflow-y: auto; overflow-x: hidden; min-height: 0; margin-bottom: 10px;">
         <div class="loading">Sincronizzazione dati FIP...</div>
     </div>
 
-    <div id="details-container" class="hidden" style="display: flex; flex-direction: column; flex: 1; overflow: hidden; margin-bottom: 60px;">
+    <div id="details-container" class="hidden" style="display: flex; flex-direction: column; flex: 1; overflow: hidden; margin-bottom: 10px;">
         <div class="header-details" style="flex-shrink: 0;">
             <button onclick="showClassifica()" class="back-btn">
                 <i class="fas fa-arrow-left"></i> Back
@@ -67,17 +75,9 @@
         </div>
     </div>
 
-
-    <div class="bottom-buttons-container" id="bottomButtonsContainer">
-        <div id="nota-classifica" class="hidden" style="flex-shrink: 0; color: #ef4444; font-size: 1.2rem; font-weight: bold; margin-top: 4px; text-align: center;">
-            * classifica provvisoria
-        </div>
-        
-        <div class="nav-button-container" style="flex-shrink: 0;">
-            <a id="fip-external-link" href="#" target="_blank" class="fip-btn">
-                Vai al sito ufficiale FIP <i class="fas fa-external-link-alt" style="font-size: 1.6rem; margin-left: 5px;"></i>
-            </a>
-        </div>
+    <!-- Nota classifica provvisoria in basso -->
+    <div id="nota-classifica" class="hidden" style="flex-shrink: 0; color: #ef4444; font-size: 1.1rem; font-weight: bold; text-align: center;">
+        * classifica provvisoria
     </div>
 </div>
 
