@@ -24,10 +24,10 @@
 
   <script src="https://embed.twitch.tv/embed/v1.js"></script>
 
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/modulepreload-polyfill-DZAeo19I.js"></script>
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/U14_FN-xayHWGSw.js"></script>
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/myTeamConfig-Dyo5EjWA.js"></script>
-  <script type="module" crossorigin src="/bsk-tst-2026/assets/main-DUF_EetD.js"></script>
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/modulepreload-polyfill-CGFQqdB4.js"></script>
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/U14_FN-C-C36si9.js"></script>
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/myTeamConfig-DZD3KMrm.js"></script>
+  <script type="module" crossorigin src="/bsk-tst-2026/assets/main-Dcv0pmHS.js"></script>
   <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/main-DbZ7AZpq.css">
   <link rel="stylesheet" crossorigin href="/bsk-tst-2026/assets/direttavideo-B6E1kXoB.css">
 </head>
@@ -141,12 +141,6 @@
                 <span id="team-details-B" class="team-cumulative-details">[TL:0/0, T2:0, T3:0]</span>
             </div>      
           </div>
-          <!-- BOTTONE CAMBIO QUINTENTO -->
-          <div id="cambio-quintetto-container" style="display: none; justify-content: center; align-items: center; margin: 4px 0; width: 100%;">
-              <button id="btn-cambio-quintetto" onclick="window.markCambioQuintetto()" style="background-color: var(--primary, #27ae60); color: white; border: none; padding: 6px 10px; border-radius: 4px; font-size: 1.2rem; font-weight: bold; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.3);">
-                  <i class="fas fa-exchange-alt" style="margin-right: 6px;"></i> Cambia Quintetto
-              </button>
-          </div>          
 
           <div id="highlights-section" class="highlights-container hidden-section">
             <div id="highlight-label" class="highlight-placeholder"></div>
@@ -185,12 +179,19 @@
             <div id="opponent" class="opponent-label">PUNTI SQUADRA B</div>
               <div class="highlights-buttons">
                 <button id="btn-details" class="btn-details" onclick="window.ShowPlayerPopup()">Details</button>
-                <button id="btn-opp-1" class="btn-score" onclick="window.IncrPuntiSquadraB(1)">+1</button>
-                <button id="btn-opp-2" class="btn-score" onclick="window.IncrPuntiSquadraB(2)">+2</button>
-                <button id="btn-opp-3" class="btn-score" onclick="window.IncrPuntiSquadraB(3)">+3</button>
+                <button id="btn-opp-1" class="btn-score" onclick="window.IncrPuntiSquadraB(1, this)">+1</button>
+                <button id="btn-opp-2" class="btn-score" onclick="window.IncrPuntiSquadraB(2, this)">+2</button>
+                <button id="btn-opp-3" class="btn-score" onclick="window.IncrPuntiSquadraB(3, this)">+3</button>
               </div>
             </div>
           </div>
+
+          <!-- BOTTONE CAMBIO QUINTENTO -->
+          <div id="cambio-quintetto-container" style="display: none; justify-content: left; align-items: center; width: 100%;">
+              <button id="btn-cambio-quintetto" onclick="window.markCambioQuintetto()" style="background-color: var(--primary, #27ae60); color: white; border: none; padding: 6px 10px; border-radius: 4px; font-size: 1.2rem; font-weight: bold; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.3);">
+                  <i class="fas fa-exchange-alt" style="margin-right: 6px;"></i> Cambia Quintetto
+              </button>
+          </div>          
 
           <div id="players-grid">
             <div class="loading-container">
